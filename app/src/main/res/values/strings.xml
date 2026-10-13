@@ -1,0 +1,123 @@
+<resources>
+    <string name="app_name">VoLTE Enabler</string>
+    <string name="app_description">Enable VoLTE &amp; IMS Settings on Samsung &amp; Android via Shizuku</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_volte_methods">VoLTE Methods</string>
+    <string name="nav_network_tools">Network Tools</string>
+    <string name="nav_terminal">ADB Terminal</string>
+
+    <!-- Shizuku Status -->
+    <string name="shizuku_status_title">Shizuku Status</string>
+    <string name="shizuku_not_installed">Shizuku is Not Installed</string>
+    <string name="shizuku_not_running">Shizuku Service is Not Running</string>
+    <string name="shizuku_permission_needed">Permission Required</string>
+    <string name="shizuku_connected">Connected &amp; Authorized (UID 2000)</string>
+    <string name="shizuku_grant_btn">Grant Permission</string>
+    <string name="shizuku_open_app_btn">Open Shizuku</string>
+    <string name="shizuku_install_btn">Get Shizuku</string>
+    <string name="shizuku_desc_connected">Privileged shell access is ready. You can apply all VoLTE methods without a PC.</string>
+    <string name="shizuku_desc_not_running">Start Shizuku on your device via Wireless Debugging or PC once to unlock rootless ADB commands.</string>
+
+    <!-- Device Info -->
+    <string name="device_info_title">Device Information</string>
+    <string name="device_model">Model</string>
+    <string name="device_android_ver">Android Version</string>
+    <string name="device_oneui_ver">One UI Version</string>
+    <string name="device_carrier">CSC / Carrier</string>
+    <string name="device_sim_state">SIM State</string>
+    <string name="device_refresh">Refresh Info</string>
+
+    <!-- VoLTE Methods -->
+    <string name="methods_title">VoLTE Activation Methods</string>
+    <string name="methods_subtitle">Select the method that matches your device model and Android version</string>
+
+    <!-- Method 1: Lockscreen -->
+    <string name="method_lockscreen_title">Method 1: Lockscreen Shortcut (Recommended)</string>
+    <string name="method_lockscreen_desc">Replaces the lockscreen Right Shortcut (Camera) with Samsung IMS Settings. Bypasses Android 13 &amp; 14 restrictions.</string>
+    <string name="method_lockscreen_apply">Set IMS to Lockscreen</string>
+    <string name="method_lockscreen_restore">Restore Camera Shortcut</string>
+    <string name="method_lockscreen_current">Current Shortcut: %1$s</string>
+    <string name="method_lockscreen_dialog_title">Instructions to Enable VoLTE</string>
+    <string name="method_lockscreen_dialog_step1">1. Press your Power button once to lock the phone screen.</string>
+    <string name="method_lockscreen_dialog_step2">2. Wake the screen. The bottom-right lock icon is now IMS Settings.</string>
+    <string name="method_lockscreen_dialog_step3">3. Swipe the IMS Settings icon and unlock with your PIN / Fingerprint.</string>
+    <string name="method_lockscreen_dialog_step4">4. In IMS Settings, check the box for \"GCF MODE\".</string>
+    <string name="method_lockscreen_dialog_step5">5. Tap \"OK\" in the confirmation popup. VoLTE will immediately register!</string>
+    <string name="method_lockscreen_dialog_step6">6. Return to this app and tap \"Restore Camera Shortcut\".</string>
+    <string name="dialog_got_it">Got It</string>
+
+    <!-- Method 2: Side Key -->
+    <string name="method_sidekey_title">Method 2: Side Key / Double-Press Power</string>
+    <string name="method_sidekey_desc">Configures double-pressing the power button to launch IMS Settings.</string>
+    <string name="method_sidekey_apply">Assign Double-Press to IMS</string>
+    <string name="method_sidekey_open_settings">Open Side Key Settings</string>
+    <string name="method_sidekey_restore">Restore Double-Press to Camera</string>
+
+    <!-- Method 3: Assistant -->
+    <string name="method_assistant_title">Method 3: Assistant / Long-Press Home</string>
+    <string name="method_assistant_desc">Temporarily sets digital assistant to IMS Settings so long-pressing Home opens it.</string>
+    <string name="method_assistant_apply">Set IMS as Assistant</string>
+    <string name="method_assistant_trigger">Trigger Home Long-Press</string>
+    <string name="method_assistant_restore">Restore Google Assistant</string>
+
+    <!-- Method 4: Direct Launch -->
+    <string name="method_direct_title">Method 4: Direct Launch IMS</string>
+    <string name="method_direct_desc">Launches IMS Settings activity directly via Shizuku shell. Works on Android 10-12.</string>
+    <string name="method_direct_launch_ims">Launch IMS Settings</string>
+    <string name="method_direct_launch_band">Launch Samsung Band Selection</string>
+    <string name="method_direct_denied">Direct launch blocked by Knox/Security on Android 14. Please use Method 1 (Lockscreen Shortcut)!</string>
+
+    <!-- Method 5: IMS Repair -->
+    <string name="method_repair_title">Method 5: Reinstall &amp; Enable IMS Packages</string>
+    <string name="method_repair_desc">Re-enables and reinstalls missing or debloated Samsung IMS system packages (com.sec.ims, com.samsung.advp.imssettings, etc.).</string>
+    <string name="method_repair_scan">Scan Packages</string>
+    <string name="method_repair_all">1-Click Repair &amp; Enable All</string>
+    <string name="pkg_installed">Installed</string>
+    <string name="pkg_missing">Disabled or Missing</string>
+
+    <!-- Network Tools -->
+    <string name="tools_title">Network Settings &amp; Secret Menus</string>
+    <string name="tool_radio_info_title">RadioInfo (Phone Information)</string>
+    <string name="tool_radio_info_desc">View signal metrics, toggle VoLTE Provisioned, Wi-Fi Calling, and set Preferred Network Mode (NR/LTE/GSM).</string>
+    <string name="tool_radio_info_btn">Open RadioInfo (*#*#4636#*#*)</string>
+
+    <string name="tool_apn_title">Access Point Names (APN)</string>
+    <string name="tool_apn_desc">Open APN configuration and add required VoLTE carrier profiles.</string>
+    <string name="tool_apn_open_btn">Open APN Settings</string>
+
+    <string name="tool_qs_tile_title">Mobile Data Quick Settings Tile</string>
+    <string name="tool_qs_tile_desc">Restore the missing Mobile Data icon to your notification panel / Quick Settings tiles.</string>
+    <string name="tool_qs_tile_btn">Show Mobile Data Tile</string>
+
+    <string name="tool_reboot_title">Power &amp; Reboot Options</string>
+    <string name="tool_reboot_normal">Reboot Phone</string>
+    <string name="tool_reboot_recovery">Reboot Recovery</string>
+    <string name="tool_reboot_download">Reboot Download (Odin)</string>
+    <string name="tool_reboot_bootloader">Reboot Bootloader</string>
+
+    <string name="tool_other_oem_title">Mediatek &amp; Other OEM Menus</string>
+    <string name="tool_mtk_engineer">MTK EngineerMode</string>
+    <string name="tool_mtk_band">MTK Band Select</string>
+    <string name="tool_lg_network">LG Mobile Network Settings</string>
+
+    <!-- APN Profiles -->
+    <string name="apn_profiles_title">VoLTE APN Profiles (Yemen Mobile &amp; Global)</string>
+    <string name="apn_copy">Copy</string>
+    <string name="apn_copied">Copied to clipboard!</string>
+
+    <!-- Terminal -->
+    <string name="terminal_title">Shizuku ADB Shell Terminal</string>
+    <string name="terminal_hint">Type ADB shell command (e.g. getprop ro.product.model)...</string>
+    <string name="terminal_run">Run</string>
+    <string name="terminal_clear">Clear</string>
+    <string name="terminal_copy">Copy Output</string>
+    <string name="terminal_presets_title">Quick Diagnostic Commands</string>
+
+    <!-- Common Messages -->
+    <string name="success_applied">Applied successfully!</string>
+    <string name="success_restored">Restored successfully!</string>
+    <string name="error_shizuku_required">Shizuku permission required for this operation.</string>
+    <string name="switch_language">Language / اللغة</string>
+</resources>

@@ -1,0 +1,123 @@
+<resources>
+    <string name="app_name">مفعل VoLTE</string>
+    <string name="app_description">تفعيل ميزات VoLTE وإعدادات IMS لهواتف سامسونج وأندرويد عبر شيزوكو (بدون كمبيوتر)</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_volte_methods">طرق التفعيل</string>
+    <string name="nav_network_tools">إعدادات الشبكة</string>
+    <string name="nav_terminal">طرفية ADB</string>
+
+    <!-- Shizuku Status -->
+    <string name="shizuku_status_title">حالة خدمة شيزوكو (Shizuku)</string>
+    <string name="shizuku_not_installed">تطبيق شيزوكو غير مثبت</string>
+    <string name="shizuku_not_running">خدمة شيزوكو متوقفة</string>
+    <string name="shizuku_permission_needed">يتطلب منح الصلاحية</string>
+    <string name="shizuku_connected">متصل ومفعل بصلاحيات النظام (UID 2000)</string>
+    <string name="shizuku_grant_btn">منح الصلاحية</string>
+    <string name="shizuku_open_app_btn">فتح شيزوكو</string>
+    <string name="shizuku_install_btn">تحميل شيزوكو</string>
+    <string name="shizuku_desc_connected">صلاحية شل ADB جاهزة بالكامل. يمكنك تطبيق جميع طرق تفعيل VoLTE دون الحاجة لكمبيوتر.</string>
+    <string name="shizuku_desc_not_running">قم بتشغيل خدمة شيزوكو عبر خيار (تصحيح الأخطاء اللاسلكي Wireless Debugging) في إعدادات الهاتف.</string>
+
+    <!-- Device Info -->
+    <string name="device_info_title">معلومات الهاتف والشبكة</string>
+    <string name="device_model">طراز الهاتف</string>
+    <string name="device_android_ver">إصدار أندرويد</string>
+    <string name="device_oneui_ver">إصدار One UI</string>
+    <string name="device_carrier">رمز المشغل / CSC</string>
+    <string name="device_sim_state">حالة الشريحة SIM</string>
+    <string name="device_refresh">تحديث البيانات</string>
+
+    <!-- VoLTE Methods -->
+    <string name="methods_title">طرق تفعيل ميزة VoLTE</string>
+    <string name="methods_subtitle">اختر الطريقة المتوافقة مع طراز هاتفك وإصدار أندرويد</string>
+
+    <!-- Method 1: Lockscreen -->
+    <string name="method_lockscreen_title">الطريقة الأولى: اختصار شاشة القفل (الأكثر فعالية)</string>
+    <string name="method_lockscreen_desc">تغيير الاختصار الأيمن (الكاميرا) إلى إعدادات IMS لتجاوز قيود أندرويد 13 و 14 وتفعيل وضع GCF.</string>
+    <string name="method_lockscreen_apply">تعيين اختصار IMS على شاشة القفل</string>
+    <string name="method_lockscreen_restore">استعادة اختصار الكاميرا الافتراضي</string>
+    <string name="method_lockscreen_current">الاختصار الحالي: %1$s</string>
+    <string name="method_lockscreen_dialog_title">خطوات تشغيل VoLTE</string>
+    <string name="method_lockscreen_dialog_step1">1. اضغط على زر تشغيل الهاتف (البور) لإغلاق الشاشة (شاشة القفل).</string>
+    <string name="method_lockscreen_dialog_step2">2. أنر الشاشة؛ ستجد أيقونة إعدادات IMS في الزاوية اليمنى السفلية.</string>
+    <string name="method_lockscreen_dialog_step3">3. اسحب أيقونة IMS وأدخل رمز القفل أو البصمة لفتح القفل.</string>
+    <string name="method_lockscreen_dialog_step4">4. ستفتح واجهة إعدادات IMS، قم بتفعيل خيار \"GCF MODE\".</string>
+    <string name="method_lockscreen_dialog_step5">5. اضغط \"OK / موافق\" في الرسالة المنبثقة؛ ستتفعل ميزة VoLTE فوراً!</string>
+    <string name="method_lockscreen_dialog_step6">6. عد إلى هذا التطبيق واضغط على \"استعادة اختصار الكاميرا الافتراضي\".</string>
+    <string name="dialog_got_it">فهمت الخطوات</string>
+
+    <!-- Method 2: Side Key -->
+    <string name="method_sidekey_title">الطريقة الثانية: المفتاح الجانبي (الضغط المزدوج على زر البور)</string>
+    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS مباشرة.</string>
+    <string name="method_sidekey_apply">تعيين الضغط المزدوج إلى IMS</string>
+    <string name="method_sidekey_open_settings">فتح إعدادات المفتاح الجانبي</string>
+    <string name="method_sidekey_restore">استعادة وظيفة الكاميرا</string>
+
+    <!-- Method 3: Assistant -->
+    <string name="method_assistant_title">الطريقة الثالثة: المساعد الرقمي (الضغط المطول على زر الهوم)</string>
+    <string name="method_assistant_desc">تعيين إعدادات IMS كمساعد رقمي مؤقت بحيث يفتح عند الضغط المطول على زر الشاشة الرئيسية.</string>
+    <string name="method_assistant_apply">تعيين IMS كمساعد رقمي</string>
+    <string name="method_assistant_trigger">محاكاة ضغط زر الهوم مطولاً</string>
+    <string name="method_assistant_restore">استعادة مساعد جوجل الافتراضي</string>
+
+    <!-- Method 4: Direct Launch -->
+    <string name="method_direct_title">الطريقة الرابعة: الفتح المباشر لإعدادات IMS</string>
+    <string name="method_direct_desc">تشغيل واجهة IMS مباشرة عبر أوامر شيزوكو (يعمل على أندرويد 10 إلى 12).</string>
+    <string name="method_direct_launch_ims">فتح إعدادات IMS مباشرة</string>
+    <string name="method_direct_launch_band">فتح واجهة اختيار الترددات (Band Selection)</string>
+    <string name="method_direct_denied">تم حظر الفتح المباشر بواسطة حماية أندرويد 14. يرجى استخدام الطريقة الأولى (اختصار شاشة القفل)!</string>
+
+    <!-- Method 5: IMS Repair -->
+    <string name="method_repair_title">الطريقة الخامسة: إصلاح وإعادة تفعيل حزم IMS</string>
+    <string name="method_repair_desc">إعادة تثبيت وتفعيل حزم سامسونج الأساسية الخاصة بـ VoLTE في حال كانت معطلة أو محذوفة.</string>
+    <string name="method_repair_scan">فحص حالة الحزم</string>
+    <string name="method_repair_all">إصلاح وتفعيل جميع الحزم بضغطة زر</string>
+    <string name="pkg_installed">مثبت ومفعل</string>
+    <string name="pkg_missing">معطل أو مفقود</string>
+
+    <!-- Network Tools -->
+    <string name="tools_title">إعدادات الشبكة والقوائم السرية</string>
+    <string name="tool_radio_info_title">معلومات الهاتف والشبكة (RadioInfo)</string>
+    <string name="tool_radio_info_desc">معاينة تفاصيل الإشارة، وتفعيل خيارات VoLTE الموردة (VoLTE Provisioned) وتحديد نمط الشبكة المفضل (LTE/NR/GSM).</string>
+    <string name="tool_radio_info_btn">فتح واجهة معلومات الهاتف (*#*#4636#*#*)</string>
+
+    <string name="tool_apn_title">نقاط الوصول (APN)</string>
+    <string name="tool_apn_desc">فتح إعدادات نقاط الوصول وإضافة إعدادات VoLTE الخاصة بالشبكة.</string>
+    <string name="tool_apn_open_btn">فتح إعدادات نقاط الوصول (APN)</string>
+
+    <string name="tool_qs_tile_title">إظهار أيقونة بيانات الهاتف في لوحة الاختصارات</string>
+    <string name="tool_qs_tile_desc">إعادة إظهار أيقونة تشغيل الإنترنت (بيانات الهاتف) في لوحة الإشعارات إذا تم إخفاؤها.</string>
+    <string name="tool_qs_tile_btn">إظهار أيقونة بيانات الهاتف</string>
+
+    <string name="tool_reboot_title">خيارات إعادة التشغيل المتقدمة</string>
+    <string name="tool_reboot_normal">إعادة تشغيل عادية</string>
+    <string name="tool_reboot_recovery">إعادة التشغيل للريكفري (Recovery)</string>
+    <string name="tool_reboot_download">إعادة التشغيل لوضع الداونلود (Odin)</string>
+    <string name="tool_reboot_bootloader">إعادة التشغيل للبوت لودر</string>
+
+    <string name="tool_other_oem_title">قوائم ميديا تيك والشركات الأخرى</string>
+    <string name="tool_mtk_engineer">وضع المهندس (MTK EngineerMode)</string>
+    <string name="tool_mtk_band">اختيار النطاقات (MTK Band Select)</string>
+    <string name="tool_lg_network">إعدادات شبكة إل جي (LG Network)</string>
+
+    <!-- APN Profiles -->
+    <string name="apn_profiles_title">إعدادات نقاط وصول VoLTE (يمن موبايل وعام)</string>
+    <string name="apn_copy">نسخ</string>
+    <string name="apn_copied">تم النسخ إلى الحافظة بنجاح!</string>
+
+    <!-- Terminal -->
+    <string name="terminal_title">طرفية أوامر ADB عبر شيزوكو</string>
+    <string name="terminal_hint">اكتب أمر شل ADB (مثال: getprop ro.product.model)...</string>
+    <string name="terminal_run">تنفيذ</string>
+    <string name="terminal_clear">مسح</string>
+    <string name="terminal_copy">نسخ المخرجات</string>
+    <string name="terminal_presets_title">أوامر فحص سريعة</string>
+
+    <!-- Common Messages -->
+    <string name="success_applied">تم التطبيق بنجاح!</string>
+    <string name="success_restored">تمت الاستعادة بنجاح!</string>
+    <string name="error_shizuku_required">يتطلب منح صلاحية شيزوكو أولاً لتنفيذ هذه العملية.</string>
+    <string name="switch_language">Language / اللغة</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Phone / Cellular VoLTE icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,30 C35.79,30 34,31.79 34,34 L34,74 C34,76.21 35.79,78 38,78 L70,78 C72.21,78 74,76.21 74,74 L74,34 C74,31.79 72.21,30 70,30 L38,30 Z M40,36 L68,36 L68,68 L40,68 L40,36 Z M54,71 C55.1,71 56,71.9 56,73 C56,74.1 55.1,75 54,75 C52.9,75 52,74.1 52,73 C52,71.9 52.9,71 54,71 Z" />
+    <path
+        android:fillColor="#00E676"
+        android:pathData="M44,48 L48,60 L52,48 L56,48 L50,64 L46,64 L42,48 Z" />
+    <path
+        android:fillColor="#00E676"
+        android:pathData="M60,48 C57.79,48 56,49.79 56,52 L56,60 C56,62.21 57.79,64 60,64 C62.21,64 64,62.21 64,60 L64,52 C64,49.79 62.21,48 60,48 Z M61.5,60 C61.5,60.83 60.83,61.5 60,61.5 C59.17,61.5 58.5,60.83 58.5,60 L58.5,52 C58.5,51.17 59.17,50.5 60,50.5 C60.83,50.5 61.5,51.17 61.5,52 L61.5,60 Z" />
+</vector>
