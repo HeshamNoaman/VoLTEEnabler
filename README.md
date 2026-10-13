@@ -14,13 +14,21 @@ A standalone native Android application that connects directly to **[Shizuku](ht
 
 | Home & Shizuku Status | VoLTE Activation Methods | Step-by-Step Guidance |
 |:---:|:---:|:---:|
-| <img src="screenshots/screen_home_portrait.png" width="250"/> | <img src="screenshots/screen_methods.png" width="250"/> | <img src="screenshots/screen_dialog_success.png" width="250"/> |
+| <img src="docs/screenshots/screen_home_portrait.png" width="250"/> | <img src="docs/screenshots/screen_methods.png" width="250"/> | <img src="docs/screenshots/screen_dialog_success.png" width="250"/> |
 | **الشاشة الرئيسية وحالة شيزوكو** | **طرق تفعيل VoLTE المتعددة** | **خطوات التفعيل المنبثقة** |
 
 | Network Tools & Secret Menus | Built-in ADB Terminal | Arabic RTL Interface |
 |:---:|:---:|:---:|
-| <img src="screenshots/screen_tools_now.png" width="250"/> | <img src="screenshots/screen_term_result.png" width="250"/> | <img src="screenshots/screen_arabic.png" width="250"/> |
+| <img src="docs/screenshots/screen_tools_now.png" width="250"/> | <img src="docs/screenshots/screen_term_result.png" width="250"/> | <img src="docs/screenshots/screen_arabic.png" width="250"/> |
 | **أدوات الشبكة والرموز السرية** | **طرفية أوامر ADB المدمجة** | **دعم كامل للغة العربية (RTL)** |
+
+---
+
+## 📖 Detailed Technical Documentation
+
+For an in-depth explanation of how each bypass method works under the hood, why Samsung blocks unexported activities on Android 13 & 14, the raw ADB shell commands executed, and the associated Kotlin code, refer to:
+
+👉 **[VoLTE Activation Methods & ADB Commands Reference](docs/METHODS_AND_ADB_COMMANDS.md)**
 
 ---
 
@@ -83,16 +91,19 @@ java.lang.SecurityException: Permission Denial: starting Intent { cmp=com.samsun
 
 ---
 
-## 🚀 Building & Installing
+## 📥 Download & Installation
 
-### Compile Debug APK
-From PowerShell or Bash within the project directory:
+### Option 1: Direct Download (Recommended)
+Download the latest ready-to-install APK (`app-debug.apk` or `app-release.apk`) directly from the **[Releases](https://github.com/)** section of this repository and install it directly on your phone.
+
+### Option 2: Build from Source & Install via ADB (Developers)
+If you prefer compiling the project from source:
+
 ```bash
+# 1. Compile Debug APK
 ./gradlew assembleDebug
-```
 
-### Install onto Device via ADB
-```bash
+# 2. Install onto Device via ADB
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
