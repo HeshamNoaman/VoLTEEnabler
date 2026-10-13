@@ -1,34 +1,111 @@
 # VoLTE Enabler (مفعل VoLTE)
 
-A modern Android application built with **Jetpack Compose** and **Material 3** that connects directly to **Shizuku** on-device to execute privileged ADB commands and system configurations without requiring a PC or root access.
+[![Android](https://img.shields.io/badge/Platform-Android%2010.0%2B-green.svg)](https://developer.android.com)
+[![Shizuku](https://img.shields.io/badge/Powered%20By-Shizuku%20API-blue.svg)](https://shizuku.rikka.app/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0-purple.svg)](https://kotlinlang.org)
+[![Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-red.svg)](https://developer.android.com/jetpack/compose)
+[![Bilingual](https://img.shields.io/badge/Language-English%20%7C%20العربية-orange.svg)]()
 
-## Features
+A standalone native Android application that connects directly to **[Shizuku](https://shizuku.rikka.app/)** to enable VoLTE (Voice over LTE) on Samsung Galaxy and other Android devices **without requiring a PC, ADB cables, or root access**.
 
-- **Shizuku Privileged Bridge**: Direct binder link to execute privileged shell commands (UID 2000) and manage `WRITE_SECURE_SETTINGS` without root.
-- **Multiple VoLTE Enablement Methods**:
-  - **Lock Screen Shortcut**: Configures Samsung lockscreen right shortcut to IMS Settings (`com.samsung.advp.imssettings/.MainActivity`) to bypass One UI security restrictions.
-  - **Side Key / Double-Tap**: Remaps power button double-press to launch IMS Settings directly.
-  - **Assistant Button**: Maps device assistant gesture to IMS Settings.
-  - **Direct Launch**: Launches IMS Settings and Band Selection directly (supported on Android 10–12).
-  - **IMS Package Repair**: One-tap repair and enable for core Samsung IMS packages (`com.sec.ims`, `com.sec.imsservice`, etc.).
-- **Network Settings & Tools**:
-  - Radio Info (`*#*#4636#*#*`)
-  - Samsung Hidden Network Band Selection
-  - APN Editor & Preset Profiles
-  - Mobile Data QS Tile Toggle
-  - Reboot to Recovery / Download mode
-- **Privileged ADB Terminal**: Built-in interactive console with preloaded command snippets.
-- **Bilingual Interface**: Full English and Arabic localization with Material 3 dynamic theming.
+---
 
-## Requirements
+## 📸 Screenshots / لقطات الشاشة
 
-- Android 10.0+ (API level 29 or higher)
-- [Shizuku](https://shizuku.rikka.app/) installed and running on the target device
+| Home & Shizuku Status | VoLTE Activation Methods | Step-by-Step Guidance |
+|:---:|:---:|:---:|
+| <img src="screenshots/screen_home_portrait.png" width="250"/> | <img src="screenshots/screen_methods.png" width="250"/> | <img src="screenshots/screen_dialog_success.png" width="250"/> |
+| **الشاشة الرئيسية وحالة شيزوكو** | **طرق تفعيل VoLTE المتعددة** | **خطوات التفعيل المنبثقة** |
 
-## Building from Source
+| Network Tools & Secret Menus | Built-in ADB Terminal | Arabic RTL Interface |
+|:---:|:---:|:---:|
+| <img src="screenshots/screen_tools_now.png" width="250"/> | <img src="screenshots/screen_term_result.png" width="250"/> | <img src="screenshots/screen_arabic.png" width="250"/> |
+| **أدوات الشبكة والرموز السرية** | **طرفية أوامر ADB المدمجة** | **دعم كامل للغة العربية (RTL)** |
 
+---
+
+## 🎯 The Problem & Our Solution
+
+### The Samsung One UI Restriction
+On modern Samsung Galaxy devices running One UI 5 / 6 (Android 13 & 14), Samsung configured the hidden IMS Settings activity (`com.samsung.advp.imssettings/.MainActivity`) as **unexported** (`android:exported="false"`). Attempting to launch this activity via standard shortcuts or even direct ADB commands fails with:
+```text
+java.lang.SecurityException: Permission Denial: starting Intent { cmp=com.samsung.advp.imssettings/.MainActivity } not exported from uid 10146
+```
+
+### The Rootless Shizuku Bypass
+**VoLTE Enabler** solves this directly on-device by utilizing **Shizuku's privileged shell (UID 2000)** to safely rewrite system and secure settings:
+1. **Method 1: Lockscreen Shortcut (Recommended for Android 13 & 14)**:
+   - Temporarily assigns the lockscreen bottom-right shortcut (Camera) to `com.samsung.advp.imssettings/.MainActivity` in `Settings.System`.
+   - Samsung's SystemUI launches the unexported activity with system-level privileges upon swiping the lock icon.
+   - Once inside, enabling **GCF MODE** (Global Certification Forum) registers VoLTE immediately with any carrier.
+   - Includes 1-tap **Restore Camera Shortcut** with automatic configuration backup.
+2. **Method 2: Side Key / Power Button Double-Press**:
+   - Rebinds the One UI power double-press trigger (`function_key_config_doublepress_value`) to open IMS Settings instantly.
+3. **Method 3: Digital Assistant Remap**:
+   - Rebinds the long-press Home / Assistant action (`settings put secure assistant ...`) to IMS Settings.
+4. **Method 4: Direct Launch**:
+   - Direct activity launcher for Android 10–12 devices where the activity is exported, plus 1-tap Samsung Hidden Band Selection.
+5. **Method 5: 1-Click IMS Package Repair**:
+   - Automatically detects, enables, and reinstalls any debloated, hidden, or uninstalled Samsung IMS packages (`com.sec.ims`, `com.sec.imsservice`, `com.samsung.advp.imssettings`, `com.sec.imslogger`, `com.sec.epdg`).
+
+---
+
+## ⚡ Additional Built-in Features
+
+- **Network Tools & Hidden Menus**:
+  - One-tap launcher for hidden **RadioInfo (`*#*#4636#*#*`)** to toggle *VoLTE Provisioned*, *Wi-Fi Calling*, and *Preferred Network Type* (NR/LTE/GSM).
+  - Direct shortcut to system **Access Point Names (APN)** settings.
+  - One-tap toggle to restore the missing **Mobile Data Quick Settings Tile** (`sysui_qs_tiles`).
+  - MediaTek EngineerMode, MTK Band Selection, and LG Network Settings shortcuts.
+  - Power Reboot menu (Normal, Recovery, Download / Odin, Bootloader).
+- **VoLTE Carrier APN Profiles**:
+  - Preloaded profiles with one-tap copy buttons:
+    - **Yemen Mobile 4G Data** (`ymdata`)
+    - **Yemen Mobile VoLTE** (`ims`)
+    - **Yemen Mobile VoLTE XCAP** (`xcap`)
+    - **Generic Global VoLTE APN** (`ims`)
+- **Interactive Shizuku ADB Shell Terminal**:
+  - Fully featured in-app terminal console executing real-time privileged shell commands with live exit codes and standard output.
+  - Preloaded diagnostic chips (`getprop ro.product.model`, `getprop gsm.sim.state`, etc.).
+- **Bilingual English & Arabic (RTL)**:
+  - Complete, natural Arabic localization with full Right-to-Left layout support.
+  - Instant in-app language switcher button on the TopAppBar.
+
+---
+
+## 📋 Requirements
+
+1. **Android Device**: Android 10.0 to Android 14+ (Samsung Galaxy One UI 2.0 to 6.1+ recommended).
+2. **Shizuku App**: Installed and running on your device.
+   - [Download Shizuku from GitHub](https://github.com/RikkaApps/Shizuku/releases) or Google Play.
+   - Start Shizuku via **Wireless Debugging** (no PC needed) or via a one-time ADB command.
+   - Grant **VoLTE Enabler** permission inside the Shizuku manager.
+
+---
+
+## 🚀 Building & Installing
+
+### Compile Debug APK
+From PowerShell or Bash within the project directory:
 ```bash
 ./gradlew assembleDebug
 ```
 
-The output APK will be generated at `app/build/outputs/apk/debug/app-debug.apk`.
+### Install onto Device via ADB
+```bash
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+---
+
+## 🔒 Security & Privacy
+
+- **No Root Required**: All privileged operations use Shizuku's secure Binder IPC mechanism (UID 2000).
+- **Non-Destructive**: Every method includes an automatic backup mechanism and a 1-tap Restore button.
+- **Zero Internet Permissions**: The app requires no internet access or external analytics. All operations are strictly local on your device.
+
+---
+
+## 📄 License
+
+Open-source project licensed under the [MIT License](LICENSE).
