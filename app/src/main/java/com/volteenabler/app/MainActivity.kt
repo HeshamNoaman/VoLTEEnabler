@@ -19,6 +19,7 @@ import com.volteenabler.app.data.DeviceInfo
 import com.volteenabler.app.shizuku.ShizukuManager
 import com.volteenabler.app.ui.screens.HomeScreen
 import com.volteenabler.app.ui.screens.NetworkToolsScreen
+import com.volteenabler.app.ui.screens.RadioInfoScreen
 import com.volteenabler.app.ui.screens.TerminalScreen
 import com.volteenabler.app.ui.screens.VolteMethodsScreen
 import com.volteenabler.app.ui.theme.VoLTEEnablerTheme
@@ -27,6 +28,7 @@ import java.util.Locale
 
 enum class AppTab(val titleRes: Int, val icon: ImageVector) {
     HOME(R.string.nav_home, Icons.Default.Home),
+    RADIO_INFO(R.string.nav_radio_info, Icons.Default.SignalCellularAlt),
     METHODS(R.string.nav_volte_methods, Icons.Default.Lock),
     TOOLS(R.string.nav_network_tools, Icons.Default.CellTower),
     TERMINAL(R.string.nav_terminal, Icons.Default.Terminal)
@@ -127,6 +129,10 @@ fun MainContent(
                 onRefreshDevice = { scope.launch { deviceInfo = DeviceInfo.load() } },
                 onNavigateToMethods = { selectedTab = AppTab.METHODS },
                 onNavigateToTools = { selectedTab = AppTab.TOOLS },
+                modifier = Modifier.padding(innerPadding)
+            )
+            AppTab.RADIO_INFO -> RadioInfoScreen(
+                isAuthorized = isAuthorized,
                 modifier = Modifier.padding(innerPadding)
             )
             AppTab.METHODS -> VolteMethodsScreen(
