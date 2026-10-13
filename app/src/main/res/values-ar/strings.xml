@@ -33,6 +33,7 @@
     <!-- VoLTE Methods -->
     <string name="methods_title">طرق تفعيل ميزة VoLTE</string>
     <string name="methods_subtitle">اختر الطريقة المتوافقة مع طراز هاتفك وإصدار أندرويد</string>
+    <string name="badge_recommended">موصى به</string>
 
     <!-- Method 1: Lockscreen -->
     <string name="method_lockscreen_title">الطريقة الأولى: اختصار شاشة القفل (الأكثر فعالية)</string>
@@ -40,6 +41,11 @@
     <string name="method_lockscreen_apply">تعيين اختصار IMS على شاشة القفل</string>
     <string name="method_lockscreen_restore">استعادة اختصار الكاميرا الافتراضي</string>
     <string name="method_lockscreen_current">الاختصار الحالي: %1$s</string>
+    <string name="method_lockscreen_left">الاختصار الأيسر: %1$s</string>
+    <string name="method_lockscreen_right">الاختصار الأيمن: %1$s</string>
+    <string name="shortcut_phone">الهاتف</string>
+    <string name="shortcut_camera">الكاميرا</string>
+    <string name="shortcut_ims">إعدادات IMS (سامسونج)</string>
     <string name="method_lockscreen_dialog_title">خطوات تشغيل VoLTE</string>
     <string name="method_lockscreen_dialog_step1">1. اضغط على زر تشغيل الهاتف (البور) لإغلاق الشاشة (شاشة القفل).</string>
     <string name="method_lockscreen_dialog_step2">2. أنر الشاشة؛ ستجد أيقونة إعدادات IMS في الزاوية اليمنى السفلية.</string>
@@ -51,8 +57,9 @@
 
     <!-- Method 2: Side Key -->
     <string name="method_sidekey_title">الطريقة الثانية: المفتاح الجانبي (الضغط المزدوج على زر البور)</string>
-    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS مباشرة.</string>
-    <string name="method_sidekey_apply">تعيين الضغط المزدوج إلى IMS</string>
+    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS ومحاكاة الضغط المزدوج تلقائياً.</string>
+    <string name="method_sidekey_apply">تعيين وتشغيل الضغط المزدوج</string>
+    <string name="method_sidekey_trigger">محاكاة الضغط المزدوج</string>
     <string name="method_sidekey_open_settings">فتح إعدادات المفتاح الجانبي</string>
     <string name="method_sidekey_restore">استعادة وظيفة الكاميرا</string>
 

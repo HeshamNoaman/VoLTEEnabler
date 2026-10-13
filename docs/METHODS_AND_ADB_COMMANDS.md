@@ -93,34 +93,54 @@ settings put system lock_application_shortcut '1;com.samsung.android.dialer/com.
 Samsung One UI includes built-in settings allowing users to customize the behavior of double-pressing the physical Power / Side key.
 By configuring the double-press value to point to `com.samsung.advp.imssettings`, double-pressing the power button triggers the system framework key handler to launch IMS Settings.
 
+> [!IMPORTANT]
+> **The Camera Double-Tap Conflict & Fix (Android 12, 13 & 14):**
+> Android AOSP includes an internal setting `Settings.Secure.camera_double_tap_power_gesture_disabled`.
+> If this setting is `0` (default), Android's `PhoneWindowManager` intercepts double-press power events first and launches the Camera immediately—ignoring Samsung's custom app configuration!
+> To ensure double-pressing opens IMS Settings reliably without manually toggling the switch inside Side Key settings, **`camera_double_tap_power_gesture_disabled` must be set to `1`**.
+> Furthermore, on **One UI 5 & 6 (Android 14)**, Samsung's `PhoneWindowManagerExt` maintains an in-memory key cache via `SemWindowManager$KeyCustomizationInfo`. Our app registers this key customization via reflection to ensure instant registration without requiring manual switch cycling.
+
 ### Raw ADB Commands
 
-#### 1. Set double-press type to custom app (Type 1):
+#### 1. Disable the AOSP Camera Gesture Override:
 ```bash
-settings put system function_key_config_doublepress_type 1
+adb shell settings put secure camera_double_tap_power_gesture_disabled 1
 ```
 
-#### 2. Assign IMS Settings as the double-press target:
+#### 2. Set IMS Settings as the Double-Press Target:
 ```bash
-settings put system function_key_config_doublepress_value 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
+adb shell settings put global function_key_config_doublepress_value 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
+adb shell settings put system function_key_config_doublepress_value 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
 ```
 
-#### 3. Open Side Key Settings (Optional verification UI):
+#### 3. Enable the Double-Press Action (Type 2 = Open custom app):
 ```bash
-am start -a android.intent.action.MAIN -n com.android.settings/.Settings\$SideKeySettingsActivity
+adb shell "settings put global function_key_config_doublepress 1; settings put global function_key_config_doublepress_type 2"
+adb shell settings put system function_key_config_doublepress_type 2
 ```
 
-#### 4. Restore Default Camera Double-Press (Type 0):
+#### 4. Simulate the Double-Press (Two Power button keyevents):
 ```bash
-settings put system function_key_config_doublepress_type 0
-settings put system function_key_config_doublepress_value 'com.sec.android.app.camera/com.sec.android.app.camera.Camera'
+adb shell input keyevent 26 26
+```
+*(Key code 26 corresponds to `KEYCODE_POWER`)*
+
+#### 5. Open Side Key Settings (Optional verification UI):
+```bash
+adb shell am start -a com.samsung.android.intent.action.SIDE_KEY_SETTINGS
+```
+
+#### 6. Restore Default Camera Double-Press (Type 0):
+```bash
+adb shell "settings put secure camera_double_tap_power_gesture_disabled 0; settings put global function_key_config_doublepress 1; settings put global function_key_config_doublepress_type 0; settings put global function_key_config_doublepress_value 'com.sec.android.app.camera/com.sec.android.app.camera.Camera'; settings put system function_key_config_doublepress_type 0; settings put system function_key_config_doublepress_value 'com.sec.android.app.camera/com.sec.android.app.camera.Camera'"
 ```
 
 ### Associated Code in App
 - **File**: [`SideKeyManager.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/methods/SideKeyManager.kt)
-  - `applyImsDoublePress()`: Sets type `1` and value `com.samsung.advp.imssettings/...`.
-  - `restoreCameraDoublePress()`: Restores type `0` and camera component.
-  - `openSideKeySettings()`: Opens Samsung's Side Key settings page directly.
+  - `applyImsDoublePress()`: Sets `camera_double_tap_power_gesture_disabled = 1`, `global function_key_config_doublepress = 1`, `type = 2`, `value = IMS_COMPONENT` in both `global` and `system` tables, and registers `SemWindowManager.putKeyCustomizationInfo`.
+  - `triggerDoublePower()`: Executes `input keyevent 26 26` to immediately launch IMS Settings.
+  - `restoreCameraDoublePress()`: Restores camera gesture (`0`), type `0`, and camera component.
+  - `openSideKeySettings()`: Launches Samsung's `com.samsung.android.intent.action.SIDE_KEY_SETTINGS` intent.
 
 ---
 
@@ -128,35 +148,35 @@ settings put system function_key_config_doublepress_value 'com.sec.android.app.c
 
 ### Why It Works
 Android stores the component assigned to handle the assistant interaction (triggered by long-pressing Home or swiping from the bottom corner) in `Settings.Secure.assistant`. 
-Setting this to IMS Settings allows triggering the menu using the assistant shortcut or sending the system assist keyevent (`KEYCODE_ASSIST` = 219).
+Setting this to IMS Settings allows triggering the menu using the assistant shortcut or sending the system assist keyevent (`KEYCODE_HOME` long-press or `KEYCODE_ASSIST` = 219).
 
 ### Raw ADB Commands
 
-#### 1. Read current assistant:
+#### 1. One-Liner (Assign, Trigger, & Restore Assistant):
 ```bash
-settings get secure assistant
+adb shell "input keyevent KEYCODE_HOME; settings put secure assistant 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'; input keyevent --longpress KEYCODE_HOME; settings put secure assistant 'com.google.android.googlequicksearchbox/com.google.android.voiceinteraction.GsaVoiceInteractionService'"
 ```
 
-#### 2. Set IMS Settings as Assistant:
+#### 2. Step-by-Step Execution:
 ```bash
-settings put secure assistant 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
-```
+# Return to home:
+adb shell input keyevent KEYCODE_HOME
 
-#### 3. Trigger Assistant Programmatically:
-```bash
-input keyevent 219
-```
+# Set IMS as assistant:
+adb shell settings put secure assistant 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
 
-#### 4. Restore Default Google Assistant:
-```bash
-settings put secure assistant 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.staticplugins.opa.OpaAssistInteractionService'
+# Simulate long-press of Home button:
+adb shell input keyevent --longpress KEYCODE_HOME
+
+# Restore Google Assistant:
+adb shell settings put secure assistant 'com.google.android.googlequicksearchbox/com.google.android.voiceinteraction.GsaVoiceInteractionService'
 ```
 
 ### Associated Code in App
 - **File**: [`AssistantManager.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/methods/AssistantManager.kt)
   - `applyImsAssistant()`: Backs up current assistant and applies IMS settings.
-  - `triggerHomeLongPress()`: Executes `input keyevent 219`.
-  - `restoreGoogleAssistant()`: Restores Google Assistant.
+  - `triggerHomeLongPress()`: Executes `input keyevent --longpress KEYCODE_HOME` (or `input keyevent 219`).
+  - `restoreGoogleAssistant()`: Restores Google Assistant service.
 
 ---
 
@@ -282,7 +302,39 @@ To achieve VoLTE calling, the device must connect to the carrier's dedicated IMS
 - **Password**: `xcap`
 - **APN Type**: `xcap`
 
-### 5. Hardware Reboot Commands
+### 5. Keep Screen On While Plugged In (Useful during Setup)
+```bash
+# Keep screen on while charging:
+adb shell settings put global stay_on_while_plugged_in 1
+
+# Disable / restore normal sleep timeout:
+adb shell settings put global stay_on_while_plugged_in 0
+```
+
+### 6. Device Diagnostics & Troubleshooting Commands
+From internal engineering and deployment workflows:
+
+#### Query Device IMEI via Telephony Service:
+```bash
+adb shell "service call iphonesubinfo 1 s16 com.android.shell | cut -c 52-66 | tr -d '.[:space:]'"
+```
+
+#### Check Current Screen Power State:
+```bash
+adb shell "dumpsys display | grep mScreenState"
+```
+
+#### Inspect Foreground App, Active Window, & Focus:
+```bash
+adb shell "dumpsys window | grep -E 'mFocusedApp|mCurrentFocus|top'"
+```
+
+#### List All System Packages (including uninstalled/disabled for user 0):
+```bash
+adb shell pm list packages -u -f
+```
+
+### 7. Hardware Reboot Commands
 ```bash
 reboot               # Normal Reboot
 reboot recovery      # Recovery Mode

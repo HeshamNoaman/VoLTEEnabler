@@ -88,14 +88,56 @@ fun VolteMethodsScreen(
             title = stringResource(R.string.method_lockscreen_title),
             description = stringResource(R.string.method_lockscreen_desc),
             icon = Icons.Default.Lock,
-            badgeText = "Recommended",
+            badgeText = stringResource(R.string.badge_recommended),
             extraContent = {
                 if (currentShortcutRaw.isNotBlank()) {
-                    Text(
-                        text = stringResource(R.string.method_lockscreen_current, currentShortcutRaw),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    val formatted = remember(currentShortcutRaw) {
+                        LockscreenShortcutManager.getFormattedShortcuts(context, currentShortcutRaw)
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Surface(
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(
+                                    text = stringResource(R.string.method_lockscreen_left, formatted.leftLabel),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.method_lockscreen_right, formatted.rightLabel),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = if (formatted.isRightIms) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
+                                        color = if (formatted.isRightIms) SuccessGreen else MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    if (formatted.isRightIms) {
+                                        Surface(
+                                            color = SuccessGreen.copy(alpha = 0.2f),
+                                            shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                                        ) {
+                                            Text(
+                                                text = "IMS ACTIVE",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = SuccessGreen,
+                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             },
             primaryButtonText = stringResource(R.string.method_lockscreen_apply),
@@ -135,6 +177,49 @@ fun VolteMethodsScreen(
             title = stringResource(R.string.method_sidekey_title),
             description = stringResource(R.string.method_sidekey_desc),
             icon = Icons.Default.PowerSettingsNew,
+            extraContent = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            if (!isAuthorized) {
+                                Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                                return@OutlinedButton
+                            }
+                            scope.launch {
+                                SideKeyManager.triggerDoublePower()
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.method_sidekey_trigger),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            if (!isAuthorized) {
+                                Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                                return@OutlinedButton
+                            }
+                            scope.launch {
+                                SideKeyManager.openSideKeySettings()
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.method_sidekey_open_settings),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                }
+            },
             primaryButtonText = stringResource(R.string.method_sidekey_apply),
             onPrimaryClick = {
                 if (!isAuthorized) {
@@ -142,9 +227,14 @@ fun VolteMethodsScreen(
                     return@MethodCard
                 }
                 scope.launch {
-                    SideKeyManager.applyImsDoublePress()
-                    SideKeyManager.openSideKeySettings()
-                    Toast.makeText(context, appliedMsg, Toast.LENGTH_SHORT).show()
+                    val ok = SideKeyManager.applyImsDoublePress()
+                    if (ok) {
+                        Toast.makeText(context, appliedMsg, Toast.LENGTH_SHORT).show()
+                        kotlinx.coroutines.delay(400)
+                        SideKeyManager.triggerDoublePower()
+                    } else {
+                        Toast.makeText(context, "Failed to apply Side Key settings", Toast.LENGTH_SHORT).show()
+                    }
                 }
             },
             secondaryButtonText = stringResource(R.string.method_sidekey_restore),

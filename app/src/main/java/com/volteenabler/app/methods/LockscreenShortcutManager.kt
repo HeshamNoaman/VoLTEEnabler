@@ -12,6 +12,14 @@ object LockscreenShortcutManager {
     const val DEFAULT_CAMERA = "com.sec.android.app.camera/com.sec.android.app.camera.Camera"
     const val DEFAULT_DIALER = "com.samsung.android.dialer/com.samsung.android.dialer.DialtactsActivity"
 
+    data class FormattedShortcuts(
+        val leftLabel: String,
+        val leftComponent: String,
+        val rightLabel: String,
+        val rightComponent: String,
+        val isRightIms: Boolean
+    )
+
     data class ParsedShortcuts(
         val left: String,
         val right: String
@@ -29,6 +37,49 @@ object LockscreenShortcutManager {
                 return ParsedShortcuts(left, right)
             }
         }
+    }
+
+    fun getFormattedShortcuts(context: Context, raw: String): FormattedShortcuts {
+        val parsed = ParsedShortcuts.parse(raw)
+        val leftLabel = resolveLabel(context, parsed.left)
+        val rightLabel = resolveLabel(context, parsed.right)
+        val isRightIms = parsed.right.contains("imssettings", ignoreCase = true)
+        return FormattedShortcuts(
+            leftLabel = leftLabel,
+            leftComponent = parsed.left,
+            rightLabel = rightLabel,
+            rightComponent = parsed.right,
+            isRightIms = isRightIms
+        )
+    }
+
+    private fun resolveLabel(context: Context, componentStr: String): String {
+        if (componentStr.contains("imssettings", ignoreCase = true)) {
+            return context.getString(com.volteenabler.app.R.string.shortcut_ims)
+        }
+        if (componentStr.contains("camera", ignoreCase = true)) {
+            return context.getString(com.volteenabler.app.R.string.shortcut_camera)
+        }
+        if (componentStr.contains("dialer", ignoreCase = true) || componentStr.contains("phone", ignoreCase = true)) {
+            return context.getString(com.volteenabler.app.R.string.shortcut_phone)
+        }
+        val cn = android.content.ComponentName.unflattenFromString(componentStr)
+        if (cn != null) {
+            try {
+                val ai = context.packageManager.getActivityInfo(cn, 0)
+                val label = ai.loadLabel(context.packageManager).toString()
+                if (label.isNotBlank()) return label
+            } catch (_: Exception) {
+                try {
+                    val appInfo = context.packageManager.getApplicationInfo(cn.packageName, 0)
+                    val label = appInfo.loadLabel(context.packageManager).toString()
+                    if (label.isNotBlank()) return label
+                } catch (_: Exception) {
+                    return cn.shortClassName.removePrefix(".")
+                }
+            }
+        }
+        return componentStr
     }
 
     suspend fun getCurrentRaw(context: Context): String {
