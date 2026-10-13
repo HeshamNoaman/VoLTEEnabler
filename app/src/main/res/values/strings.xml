@@ -4,7 +4,6 @@
 
     <!-- Navigation -->
     <string name="nav_home">Home</string>
-    <string name="nav_radio_info">RadioInfo</string>
     <string name="nav_volte_methods">VoLTE Methods</string>
     <string name="nav_network_tools">Network Tools</string>
     <string name="nav_terminal">ADB Terminal</string>

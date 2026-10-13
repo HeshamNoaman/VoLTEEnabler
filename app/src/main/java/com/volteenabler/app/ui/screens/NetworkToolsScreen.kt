@@ -77,9 +77,39 @@ fun NetworkToolsScreen(
                 Button(
                     onClick = {
                         scope.launch {
-                            val r1 = ShellExecutor.exec("am start -n com.android.settings/.RadioInfo")
-                            if (!r1.isSuccess) {
-                                ShellExecutor.exec("am start -n com.android.phone/.settings.RadioInfo")
+                            // Smart fallback: Android 11+ (SDK >= 30) uses com.android.phone,
+                            // confirmed by user testing. Older ROMs use com.android.settings.
+                            val commands = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                listOf(
+                                    "am start -n com.android.phone/.settings.RadioInfo",
+                                    "am start -n com.android.phone/com.android.phone.settings.RadioInfo",
+                                    "am start -n com.android.settings/.RadioInfo"
+                                )
+                            } else {
+                                listOf(
+                                    "am start -n com.android.settings/.RadioInfo",
+                                    "am start -n com.android.settings/.TestingSettings",
+                                    "am start -n com.android.phone/.settings.RadioInfo"
+                                )
+                            }
+                            var launched = false
+                            for (cmd in commands) {
+                                val res = ShellExecutor.exec(cmd)
+                                // "Error type 3" = activity class not found — skip to next
+                                if (res.isSuccess &&
+                                    !res.stderr.contains("Error type 3") &&
+                                    !res.stderr.contains("does not exist")
+                                ) {
+                                    launched = true
+                                    break
+                                }
+                            }
+                            if (!launched) {
+                                Toast.makeText(
+                                    context,
+                                    "RadioInfo not found on this device. Try dialing *#*#4636#*#* manually.",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
                     },

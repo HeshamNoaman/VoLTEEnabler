@@ -4,7 +4,6 @@
 
     <!-- Navigation -->
     <string name="nav_home">الرئيسية</string>
-    <string name="nav_radio_info">معلومات الراديو</string>
     <string name="nav_volte_methods">طرق التفعيل</string>
     <string name="nav_network_tools">إعدادات الشبكة</string>
     <string name="nav_terminal">طرفية ADB</string>
