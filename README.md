@@ -94,7 +94,7 @@ java.lang.SecurityException: Permission Denial: starting Intent { cmp=com.samsun
 ## 📥 Download & Installation
 
 ### Option 1: Direct Download (Recommended)
-Download the latest ready-to-install APK (`app-debug.apk` or `app-release.apk`) directly from the **[Releases](https://github.com/)** section of this repository and install it directly on your phone.
+Download the latest ready-to-install APK (`app-debug.apk` or `app-release.apk`) directly from the **[Releases](https://github.com/HeshamNoaman/VoLTEEnabler/releases)** section of this repository and install it directly on your phone.
 
 ### Option 2: Build from Source & Install via ADB (Developers)
 If you prefer compiling the project from source:
