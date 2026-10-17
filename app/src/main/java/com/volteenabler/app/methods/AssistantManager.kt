@@ -17,7 +17,8 @@ object AssistantManager {
     }
 
     suspend fun triggerHomeLongPress() {
-        ShellExecutor.exec("input keyevent KEYCODE_HOME; sleep 0.2; input keyevent --longpress KEYCODE_HOME")
+        // KEYCODE_ASSIST (219) immediately triggers the configured assistant on Samsung One UI
+        ShellExecutor.exec("input keyevent 219")
     }
 
     suspend fun restoreGoogleAssistant(): Boolean {
