@@ -175,12 +175,28 @@ fun NetworkToolsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = {
+                        val subId = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            android.telephony.SubscriptionManager.getDefaultDataSubscriptionId().takeIf {
+                                it != android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID
+                            } ?: android.telephony.SubscriptionManager.getDefaultSubscriptionId().takeIf {
+                                it != android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID
+                            } ?: 1
+                        } else {
+                            1
+                        }
+
+                        val intent = Intent(Settings.ACTION_APN_SETTINGS).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            putExtra("sub_id", subId)
+                            putExtra("android.provider.extra.SUB_ID", subId)
+                            putExtra("subscription", subId)
+                        }
+
                         try {
-                            val intent = Intent(Settings.ACTION_APN_SETTINGS)
                             context.startActivity(intent)
                         } catch (_: Exception) {
                             scope.launch {
-                                ShellExecutor.exec("am start -a android.settings.APN_SETTINGS")
+                                ShellExecutor.exec("am start -a android.settings.APN_SETTINGS --ei sub_id $subId")
                             }
                         }
                     },
