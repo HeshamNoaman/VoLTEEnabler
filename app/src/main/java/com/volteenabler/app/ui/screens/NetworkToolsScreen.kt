@@ -76,40 +76,65 @@ fun NetworkToolsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = {
-                        scope.launch {
-                            // Smart fallback: Android 11+ (SDK >= 30) uses com.android.phone,
-                            // confirmed by user testing. Older ROMs use com.android.settings.
-                            val commands = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                                listOf(
-                                    "am start -n com.android.phone/.settings.RadioInfo",
-                                    "am start -n com.android.phone/com.android.phone.settings.RadioInfo",
-                                    "am start -n com.android.settings/.RadioInfo"
-                                )
-                            } else {
-                                listOf(
-                                    "am start -n com.android.settings/.RadioInfo",
-                                    "am start -n com.android.settings/.TestingSettings",
-                                    "am start -n com.android.phone/.settings.RadioInfo"
-                                )
-                            }
-                            var launched = false
-                            for (cmd in commands) {
-                                val res = ShellExecutor.exec(cmd)
-                                // "Error type 3" = activity class not found — skip to next
-                                if (res.isSuccess &&
-                                    !res.stderr.contains("Error type 3") &&
-                                    !res.stderr.contains("does not exist")
-                                ) {
-                                    launched = true
-                                    break
+                        // 1. Try launching via native Android Intents directly without Shizuku
+                        val candidateIntents = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                            listOf(
+                                Intent().setClassName("com.android.phone", "com.android.phone.settings.RadioInfo"),
+                                Intent("android.intent.action.MAIN").setClassName("com.android.phone", "com.android.phone.settings.RadioInfo"),
+                                Intent().setClassName("com.android.settings", "com.android.settings.RadioInfo")
+                            )
+                        } else {
+                            listOf(
+                                Intent().setClassName("com.android.settings", "com.android.settings.RadioInfo"),
+                                Intent().setClassName("com.android.settings", "com.android.settings.TestingSettings"),
+                                Intent().setClassName("com.android.phone", "com.android.phone.settings.RadioInfo")
+                            )
+                        }
+
+                        var launchedDirectly = false
+                        for (cand in candidateIntents) {
+                            try {
+                                cand.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                context.startActivity(cand)
+                                launchedDirectly = true
+                                break
+                            } catch (_: Exception) {}
+                        }
+
+                        if (!launchedDirectly) {
+                            // 2. Fall back to shell command (via Shizuku if available)
+                            scope.launch {
+                                val commands = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                    listOf(
+                                        "am start -n com.android.phone/.settings.RadioInfo",
+                                        "am start -n com.android.phone/com.android.phone.settings.RadioInfo",
+                                        "am start -n com.android.settings/.RadioInfo"
+                                    )
+                                } else {
+                                    listOf(
+                                        "am start -n com.android.settings/.RadioInfo",
+                                        "am start -n com.android.settings/.TestingSettings",
+                                        "am start -n com.android.phone/.settings.RadioInfo"
+                                    )
                                 }
-                            }
-                            if (!launched) {
-                                Toast.makeText(
-                                    context,
-                                    "RadioInfo not found on this device. Try dialing *#*#4636#*#* manually.",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                var launchedShell = false
+                                for (cmd in commands) {
+                                    val res = ShellExecutor.exec(cmd)
+                                    if (res.isSuccess &&
+                                        !res.stderr.contains("Error type 3") &&
+                                        !res.stderr.contains("does not exist")
+                                    ) {
+                                        launchedShell = true
+                                        break
+                                    }
+                                }
+                                if (!launchedShell) {
+                                    Toast.makeText(
+                                        context,
+                                        "RadioInfo not found on this device. Try dialing *#*#4636#*#* manually.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                             }
                         }
                     },
@@ -247,8 +272,16 @@ fun NetworkToolsScreen(
                 ) {
                     OutlinedButton(
                         onClick = {
-                            scope.launch {
-                                ShellExecutor.exec("am start -n com.mediatek.engineermode/.EngineerMode")
+                            try {
+                                val intent = Intent().apply {
+                                    component = android.content.ComponentName("com.mediatek.engineermode", "com.mediatek.engineermode.EngineerMode")
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(intent)
+                            } catch (_: Exception) {
+                                scope.launch {
+                                    ShellExecutor.exec("am start -n com.mediatek.engineermode/.EngineerMode")
+                                }
                             }
                         },
                         modifier = Modifier.weight(1f)
@@ -257,8 +290,16 @@ fun NetworkToolsScreen(
                     }
                     OutlinedButton(
                         onClick = {
-                            scope.launch {
-                                ShellExecutor.exec("am start -n com.mediatek.engineermode/com.mediatek.engineermode.bandselect.BandMode")
+                            try {
+                                val intent = Intent().apply {
+                                    component = android.content.ComponentName("com.mediatek.engineermode", "com.mediatek.engineermode.bandselect.BandMode")
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(intent)
+                            } catch (_: Exception) {
+                                scope.launch {
+                                    ShellExecutor.exec("am start -n com.mediatek.engineermode/com.mediatek.engineermode.bandselect.BandMode")
+                                }
                             }
                         },
                         modifier = Modifier.weight(1f)
@@ -269,8 +310,16 @@ fun NetworkToolsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
                     onClick = {
-                        scope.launch {
-                            ShellExecutor.exec("am start -n com.lge.networksettings/com.lge.networksettings.MobileNetworkSettingsForGLOBAL")
+                        try {
+                            val intent = Intent().apply {
+                                component = android.content.ComponentName("com.lge.networksettings", "com.lge.networksettings.MobileNetworkSettingsForGLOBAL")
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            context.startActivity(intent)
+                        } catch (_: Exception) {
+                            scope.launch {
+                                ShellExecutor.exec("am start -n com.lge.networksettings/com.lge.networksettings.MobileNetworkSettingsForGLOBAL")
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxWidth()

@@ -38,18 +38,15 @@ fun VolteMethodsScreen(
     var currentShortcutRaw by remember { mutableStateOf("") }
     var imsPackages by remember { mutableStateOf(ImsPackageInfo.getRequiredPackages()) }
 
-    // Load initial shortcut and package states
-    LaunchedEffect(isAuthorized) {
-        if (isAuthorized) {
-            currentShortcutRaw = LockscreenShortcutManager.getCurrentRaw(context)
-            imsPackages = ImsRepairManager.scanPackages()
-        }
+    // Load initial shortcut and package states immediately
+    LaunchedEffect(Unit, isAuthorized) {
+        currentShortcutRaw = LockscreenShortcutManager.getCurrentRaw(context)
+        imsPackages = ImsRepairManager.scanPackages(context)
     }
 
     val appliedMsg = stringResource(R.string.success_applied)
     val restoredMsg = stringResource(R.string.success_restored)
     val errorShizukuMsg = stringResource(R.string.error_shizuku_required)
-    val deniedMsg = stringResource(R.string.method_direct_denied)
 
     if (showInstructionsDialog) {
         InstructionDialog(
@@ -83,7 +80,7 @@ fun VolteMethodsScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // Method 1: Lockscreen Shortcut (Recommended)
+        // Method 1: Lockscreen Shortcut (Recommended - Standalone / No Shizuku needed)
         MethodCard(
             title = stringResource(R.string.method_lockscreen_title),
             description = stringResource(R.string.method_lockscreen_desc),
@@ -142,11 +139,13 @@ fun VolteMethodsScreen(
             },
             primaryButtonText = stringResource(R.string.method_lockscreen_apply),
             onPrimaryClick = {
-                if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
-                    return@MethodCard
-                }
                 scope.launch {
+                    val canWrite = LockscreenShortcutManager.canWriteSettings(context)
+                    if (!isAuthorized && !canWrite) {
+                        Toast.makeText(context, "Please allow 'Modify system settings' or connect Shizuku", Toast.LENGTH_LONG).show()
+                        LockscreenShortcutManager.requestWriteSettingsPermission(context)
+                        return@launch
+                    }
                     val ok = LockscreenShortcutManager.applyImsShortcut(context)
                     if (ok) {
                         currentShortcutRaw = LockscreenShortcutManager.getCurrentRaw(context)
@@ -158,11 +157,13 @@ fun VolteMethodsScreen(
             },
             secondaryButtonText = stringResource(R.string.method_lockscreen_restore),
             onSecondaryClick = {
-                if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
-                    return@MethodCard
-                }
                 scope.launch {
+                    val canWrite = LockscreenShortcutManager.canWriteSettings(context)
+                    if (!isAuthorized && !canWrite) {
+                        Toast.makeText(context, "Please allow 'Modify system settings' or connect Shizuku", Toast.LENGTH_LONG).show()
+                        LockscreenShortcutManager.requestWriteSettingsPermission(context)
+                        return@launch
+                    }
                     val ok = LockscreenShortcutManager.restoreCameraShortcut(context)
                     if (ok) {
                         currentShortcutRaw = LockscreenShortcutManager.getCurrentRaw(context)
@@ -203,12 +204,9 @@ fun VolteMethodsScreen(
                     }
                     OutlinedButton(
                         onClick = {
-                            if (!isAuthorized) {
-                                Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
-                                return@OutlinedButton
-                            }
+                            // Opens native Samsung Side Key settings screen directly without Shizuku!
                             scope.launch {
-                                SideKeyManager.openSideKeySettings()
+                                SideKeyManager.openSideKeySettings(context)
                             }
                         },
                         modifier = Modifier.weight(1f)
@@ -279,40 +277,8 @@ fun VolteMethodsScreen(
                 }
             }
         )
-
-        // Method 4: Direct Launch IMS
-        MethodCard(
-            title = stringResource(R.string.method_direct_title),
-            description = stringResource(R.string.method_direct_desc),
-            icon = Icons.Default.Launch,
-            primaryButtonText = stringResource(R.string.method_direct_launch_ims),
-            onPrimaryClick = {
-                if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
-                    return@MethodCard
-                }
-                scope.launch {
-                    val res = ShellExecutor.exec("am start -n com.samsung.advp.imssettings/.MainActivity")
-                    if (!res.isSuccess || res.stderr.contains("SecurityException")) {
-                        Toast.makeText(context, deniedMsg, Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(context, appliedMsg, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
-            secondaryButtonText = stringResource(R.string.method_direct_launch_band),
-            onSecondaryClick = {
-                if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
-                    return@MethodCard
-                }
-                scope.launch {
-                    ShellExecutor.exec("am start -n com.samsung.android.app.telephonyui/.hiddennetworksetting.MainActivity")
-                }
-            }
-        )
-
-        // Method 5: IMS Package Repair
+ 
+        // Method 4: IMS Package Repair
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
@@ -373,7 +339,7 @@ fun VolteMethodsScreen(
                                 return@Button
                             }
                             scope.launch {
-                                imsPackages = ImsRepairManager.repairAll()
+                                imsPackages = ImsRepairManager.repairAll(context)
                                 Toast.makeText(context, appliedMsg, Toast.LENGTH_SHORT).show()
                             }
                         },
@@ -383,12 +349,9 @@ fun VolteMethodsScreen(
                     }
                     OutlinedButton(
                         onClick = {
-                            if (!isAuthorized) {
-                                Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
-                                return@OutlinedButton
-                            }
+                            // Package scan works natively without Shizuku
                             scope.launch {
-                                imsPackages = ImsRepairManager.scanPackages()
+                                imsPackages = ImsRepairManager.scanPackages(context)
                             }
                         },
                         modifier = Modifier.fillMaxWidth()

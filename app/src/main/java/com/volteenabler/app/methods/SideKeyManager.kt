@@ -61,8 +61,18 @@ object SideKeyManager {
 
     /**
      * Opens Samsung's native Side Key settings screen.
+     * Can launch via standard Intent directly without Shizuku.
      */
-    suspend fun openSideKeySettings(): ShellResult {
+    suspend fun openSideKeySettings(context: Context? = null): ShellResult {
+        if (context != null) {
+            try {
+                val intent = Intent("com.samsung.android.intent.action.SIDE_KEY_SETTINGS").apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                context.startActivity(intent)
+                return ShellResult(0, "Opened via native Intent", "")
+            } catch (_: Exception) {}
+        }
         return ShellExecutor.exec("am start -a com.samsung.android.intent.action.SIDE_KEY_SETTINGS")
     }
 

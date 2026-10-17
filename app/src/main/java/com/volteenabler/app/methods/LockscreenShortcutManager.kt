@@ -82,7 +82,27 @@ object LockscreenShortcutManager {
         return componentStr
     }
 
+    fun canWriteSettings(context: Context): Boolean {
+        return android.provider.Settings.System.canWrite(context)
+    }
+
+    fun requestWriteSettingsPermission(context: Context) {
+        val intent = android.content.Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS).apply {
+            data = android.net.Uri.parse("package:${context.packageName}")
+            flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(intent)
+    }
+
     suspend fun getCurrentRaw(context: Context): String {
+        val nativeVal = try {
+            android.provider.Settings.System.getString(context.contentResolver, KEY_SHORTCUT)
+        } catch (_: Exception) { null }
+
+        if (!nativeVal.isNullOrBlank()) {
+            return nativeVal
+        }
+
         val current = SettingsHelper.getSystem(KEY_SHORTCUT)
         return current.ifBlank {
             "1;$DEFAULT_DIALER;1;$DEFAULT_CAMERA;"
@@ -90,7 +110,7 @@ object LockscreenShortcutManager {
     }
 
     suspend fun applyImsShortcut(context: Context): Boolean {
-        val currentRaw = SettingsHelper.getSystem(KEY_SHORTCUT)
+        val currentRaw = getCurrentRaw(context)
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         // Save backup if not already saved
@@ -100,7 +120,24 @@ object LockscreenShortcutManager {
 
         val parsed = ParsedShortcuts.parse(currentRaw)
         val updated = parsed.copy(right = IMS_SETTINGS_ACTIVITY)
-        return SettingsHelper.putSystem(KEY_SHORTCUT, updated.toSettingsString())
+        val target = updated.toSettingsString()
+
+        // 1. Try native write if app has WRITE_SETTINGS permission
+        if (canWriteSettings(context)) {
+            try {
+                val ok = android.provider.Settings.System.putString(
+                    context.contentResolver,
+                    KEY_SHORTCUT,
+                    target
+                )
+                if (ok) return true
+            } catch (e: Exception) {
+                android.util.Log.w("LockscreenShortcut", "Native putString failed: ${e.message}")
+            }
+        }
+
+        // 2. Fall back to Shizuku Shell
+        return SettingsHelper.putSystem(KEY_SHORTCUT, target)
     }
 
     suspend fun restoreCameraShortcut(context: Context): Boolean {
@@ -110,11 +147,27 @@ object LockscreenShortcutManager {
         val target = if (!backup.isNullOrBlank() && !backup.contains(IMS_SETTINGS_ACTIVITY)) {
             backup
         } else {
-            val currentRaw = SettingsHelper.getSystem(KEY_SHORTCUT)
+            val currentRaw = getCurrentRaw(context)
             val parsed = ParsedShortcuts.parse(currentRaw)
             parsed.copy(right = DEFAULT_CAMERA).toSettingsString()
         }
 
+        // 1. Try native write if permitted
+        if (canWriteSettings(context)) {
+            try {
+                val ok = android.provider.Settings.System.putString(
+                    context.contentResolver,
+                    KEY_SHORTCUT,
+                    target
+                )
+                if (ok) {
+                    prefs.edit().remove(PREF_BACKUP_SHORTCUT).apply()
+                    return true
+                }
+            } catch (_: Exception) {}
+        }
+
+        // 2. Fall back to Shizuku Shell
         val success = SettingsHelper.putSystem(KEY_SHORTCUT, target)
         if (success) {
             prefs.edit().remove(PREF_BACKUP_SHORTCUT).apply()
