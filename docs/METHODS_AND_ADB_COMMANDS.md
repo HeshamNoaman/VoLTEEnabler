@@ -1,5 +1,6 @@
 # Comprehensive Guide: VoLTE Activation Methods & ADB Commands Reference
-## دليل شامل لطرق تفعيل ميزة VoLTE وأوامر ADB البرمجية المصاحبة
+
+**English** | [العربية](METHODS_AND_ADB_COMMANDS_AR.md)
 
 This technical reference document provides an in-depth explanation of all VoLTE (Voice over LTE) activation methods implemented in the **VoLTE Enabler** app, detailing the underlying Android OS mechanics, bypass tricks, raw ADB shell commands, and the corresponding Kotlin codebase implementations.
 

@@ -1,26 +1,28 @@
-# VoLTE Enabler (مفعل VoLTE)
+# VoLTE Enabler
+
+**English** | [العربية](README_AR.md)
 
 [![Android](https://img.shields.io/badge/Platform-Android%2010.0%2B-green.svg)](https://developer.android.com)
 [![Shizuku](https://img.shields.io/badge/Powered%20By-Shizuku%20API-blue.svg)](https://shizuku.rikka.app/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-purple.svg)](https://kotlinlang.org)
 [![Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-red.svg)](https://developer.android.com/jetpack/compose)
-[![Bilingual](https://img.shields.io/badge/Language-English%20%7C%20العربية-orange.svg)]()
+[![Bilingual](https://img.shields.io/badge/Language-English%20%7C%20Arabic-orange.svg)]()
 
 A standalone native Android application that connects directly to **[Shizuku](https://shizuku.rikka.app/)** to enable VoLTE (Voice over LTE) on Samsung Galaxy and other Android devices **without requiring a PC, ADB cables, or root access**.
 
 ---
 
-## 📸 Screenshots / لقطات الشاشة
+## 📸 Screenshots
 
 | Home & Shizuku Status | VoLTE Activation Methods | Step-by-Step Guidance |
 |:---:|:---:|:---:|
 | <img src="docs/screenshots/screen_home_portrait.png" width="250"/> | <img src="docs/screenshots/screen_methods.png" width="250"/> | <img src="docs/screenshots/screen_dialog_success.png" width="250"/> |
-| **الشاشة الرئيسية وحالة شيزوكو** | **طرق تفعيل VoLTE المتعددة** | **خطوات التفعيل المنبثقة** |
+| **Home & Shizuku Status** | **Multiple VoLTE Methods** | **Interactive Setup Dialog** |
 
 | Network Tools & Secret Menus | Built-in ADB Terminal | Arabic RTL Interface |
 |:---:|:---:|:---:|
 | <img src="docs/screenshots/screen_tools_now.png" width="250"/> | <img src="docs/screenshots/screen_term_result.png" width="250"/> | <img src="docs/screenshots/screen_arabic.png" width="250"/> |
-| **أدوات الشبكة والرموز السرية** | **طرفية أوامر ADB المدمجة** | **دعم كامل للغة العربية (RTL)** |
+| **Network Tools & Secret Codes** | **Integrated ADB Console** | **Complete Arabic RTL Support** |
 
 ---
 
@@ -28,7 +30,8 @@ A standalone native Android application that connects directly to **[Shizuku](ht
 
 For an in-depth explanation of how each bypass method works under the hood, why Samsung blocks unexported activities on Android 13 & 14, the raw ADB shell commands executed, and the associated Kotlin code, refer to:
 
-👉 **[VoLTE Activation Methods & ADB Commands Reference](docs/METHODS_AND_ADB_COMMANDS.md)**
+👉 **[VoLTE Activation Methods & ADB Commands Reference](docs/METHODS_AND_ADB_COMMANDS.md)** (English)  
+👉 **[دليل طرق تفعيل VoLTE وأوامر ADB البرمجية](docs/METHODS_AND_ADB_COMMANDS_AR.md)** (Arabic)
 
 ---
 
