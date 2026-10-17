@@ -7,13 +7,12 @@ This technical reference document provides an in-depth explanation of all VoLTE 
 
 ## 📑 Table of Contents
 1. [The VoLTE Problem on Samsung One UI & Android 13/14](#1-the-volte-problem-on-samsung-one-ui--android-1314)
-2. [Method 1: Lockscreen Shortcut (Recommended Bypass)](#2-method-1-lockscreen-shortcut-recommended-bypass)
-3. [Method 2: Side Key / Power Button Double-Press](#3-method-2-side-key--power-button-double-press)
-4. [Method 3: Digital Assistant / Long-Press Home Remap](#4-method-3-digital-assistant--long-press-home-remap)
-5. [Method 4: Direct Launch & Samsung Band Selection](#5-method-4-direct-launch--samsung-band-selection)
-6. [Method 5: 1-Click Samsung IMS Package Repair & Enable](#6-method-5-1-click-samsung-ims-package-repair--enable)
-7. [Network Tools, Secret Menus & APN Profiles](#7-network-tools-secret-menus--apn-profiles)
-8. [Shizuku Integration Architecture (UID 2000)](#8-shizuku-integration-architecture-uid-2000)
+2. [Method 1: Lockscreen Shortcut (Recommended Bypass - No Shizuku Required)](#2-method-1-lockscreen-shortcut-recommended-bypass)
+3. [Method 2: Side Key / Power Button Double-Press (Legacy Android 10-12 Only)](#3-method-2-side-key--power-button-double-press-android-1012-only)
+4. [Method 3: Digital Assistant / Long-Press Home Remap (Works 100% via Shizuku)](#4-method-3-digital-assistant--long-press-home-remap-works-100-via-shizuku)
+5. [Method 4: 1-Click Samsung IMS Package Repair & Enable](#5-method-4-1-click-samsung-ims-package-repair--enable)
+6. [Network Tools, Secret Menus & APN Profiles](#6-network-tools-secret-menus--apn-profiles)
+7. [Shizuku Integration Architecture (UID 2000)](#7-shizuku-integration-architecture-uid-2000)
 
 ---
 
@@ -87,116 +86,106 @@ settings put system lock_application_shortcut '1;com.samsung.android.dialer/com.
 
 ---
 
-## 3. Method 2: Side Key / Power Button Double-Press
+## 3. Method 2: Side Key / Power Button Double-Press (Android 10–12 Only)
 
-### Why It Works
-Samsung One UI includes built-in settings allowing users to customize the behavior of double-pressing the physical Power / Side key.
-By configuring the double-press value to point to `com.samsung.advp.imssettings`, double-pressing the power button triggers the system framework key handler to launch IMS Settings.
+### Status & Why It Is Restricted on One UI 5 & 6 (Android 13/14)
+On **Android 10 through 12 (One UI 2–4)**, configuring `function_key_config_doublepress_value` successfully remapped the physical Side Key double-press to launch IMS Settings.
 
-> [!IMPORTANT]
-> **The Camera Double-Tap Conflict & Fix (Android 12, 13 & 14):**
-> Android AOSP includes an internal setting `Settings.Secure.camera_double_tap_power_gesture_disabled`.
-> If this setting is `0` (default), Android's `PhoneWindowManager` intercepts double-press power events first and launches the Camera immediately—ignoring Samsung's custom app configuration!
-> To ensure double-pressing opens IMS Settings reliably without manually toggling the switch inside Side Key settings, **`camera_double_tap_power_gesture_disabled` must be set to `1`**.
-> Furthermore, on **One UI 5 & 6 (Android 14)**, Samsung's `PhoneWindowManagerExt` maintains an in-memory key cache via `SemWindowManager$KeyCustomizationInfo`. Our app registers this key customization via reflection to ensure instant registration without requiring manual switch cycling.
+However, reverse engineering of One UI 6.1 binaries (`SettingsProvider.apk` and `services.jar`) proved that Samsung implemented a two-tier block on modern firmwares:
+1. **Database Blacklist (`SettingsProvider.apk -> AdbCommandUtils`)**:
+   Samsung added `ADB_CHANGE_NOT_ALLOWED_GLOBAL_SETTINGS` which explicitly includes `function_key_config_doublepress_value`. When an ADB shell (`uid=2000`) or root (`uid=0`) command attempts to write to this key, `AdbCommandUtils.isAdbChangeAllowed` rejects it with:
+   ```text
+   Invalid command; no put performed
+   ```
+2. **Launcher Category Enforcement (`services.jar -> KeyCustomizationInfoManager`)**:
+   During key dispatch, `KeyCustomizationInfoManager.getSideKeyDoubleInfoFromGlobalSetting()` filters candidate applications strictly for `android.intent.category.LAUNCHER`. Because `com.samsung.advp.imssettings/.MainActivity` is a hidden system activity with only `category.DEFAULT` (no launcher icon), it is discarded. Furthermore, it does not appear in Samsung's native Side Key app picker.
 
-### Raw ADB Commands
+> [!NOTE]
+> For the complete binary disassembly and Dalvik bytecode proof, see [`decompiled_apks/samsung_sidekey_analysis/README.md`](../../decompiled_apks/samsung_sidekey_analysis/README.md).
 
-#### 1. Disable the AOSP Camera Gesture Override:
+### Legacy ADB Commands (Android 10–12):
 ```bash
+# 1. Disable AOSP camera gesture override:
 adb shell settings put secure camera_double_tap_power_gesture_disabled 1
-```
 
-#### 2. Set IMS Settings as the Double-Press Target:
-```bash
+# 2. Set IMS Settings as double-press target:
 adb shell settings put global function_key_config_doublepress_value 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
-adb shell settings put system function_key_config_doublepress_value 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
-```
 
-#### 3. Enable the Double-Press Action (Type 2 = Open custom app):
-```bash
+# 3. Enable double-press (Type 2 = Open custom app):
 adb shell "settings put global function_key_config_doublepress 1; settings put global function_key_config_doublepress_type 2"
-adb shell settings put system function_key_config_doublepress_type 2
-```
 
-#### 4. Simulate the Double-Press (Two Power button keyevents):
-```bash
+# 4. Trigger double-press:
 adb shell input keyevent 26 26
-```
-*(Key code 26 corresponds to `KEYCODE_POWER`)*
 
-#### 5. Open Side Key Settings (Optional verification UI):
-```bash
-adb shell am start -a com.samsung.android.intent.action.SIDE_KEY_SETTINGS
+# 5. Restore Camera:
+adb shell "settings put secure camera_double_tap_power_gesture_disabled 0; settings put global function_key_config_doublepress_type 0; settings put global function_key_config_doublepress_value 'com.sec.android.app.camera/com.sec.android.app.camera.Camera'"
 ```
-
-#### 6. Restore Default Camera Double-Press (Type 0):
-```bash
-adb shell "settings put secure camera_double_tap_power_gesture_disabled 0; settings put global function_key_config_doublepress 1; settings put global function_key_config_doublepress_type 0; settings put global function_key_config_doublepress_value 'com.sec.android.app.camera/com.sec.android.app.camera.Camera'; settings put system function_key_config_doublepress_type 0; settings put system function_key_config_doublepress_value 'com.sec.android.app.camera/com.sec.android.app.camera.Camera'"
-```
-
-### Associated Code in App
-- **File**: [`SideKeyManager.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/methods/SideKeyManager.kt)
-  - `applyImsDoublePress()`: Sets `camera_double_tap_power_gesture_disabled = 1`, `global function_key_config_doublepress = 1`, `type = 2`, `value = IMS_COMPONENT` in both `global` and `system` tables, and registers `SemWindowManager.putKeyCustomizationInfo`.
-  - `triggerDoublePower()`: Executes `input keyevent 26 26` to immediately launch IMS Settings.
-  - `restoreCameraDoublePress()`: Restores camera gesture (`0`), type `0`, and camera component.
-  - `openSideKeySettings()`: Launches Samsung's `com.samsung.android.intent.action.SIDE_KEY_SETTINGS` intent.
 
 ---
 
-## 4. Method 3: Digital Assistant / Long-Press Home Remap
+## 4. Method 3: Digital Assistant / Long-Press Home Remap (Works 100% via Shizuku)
 
 ### Why It Works
-Android stores the component assigned to handle the assistant interaction (triggered by long-pressing Home or swiping from the bottom corner) in `Settings.Secure.assistant`. 
-Setting this to IMS Settings allows triggering the menu using the assistant shortcut or sending the system assist keyevent (`KEYCODE_HOME` long-press or `KEYCODE_ASSIST` = 219).
+Android stores the default digital assistant in `Settings.Secure.assistant`. When configured to `com.samsung.advp.imssettings/.MainActivity`, Android's `AssistUtils` and `VoiceInteractionManagerService` (running as system `UID 1000`) launch the assistant activity directly with system privileges.
 
-### Raw ADB Commands
+On Samsung One UI 6, triggering `KEYCODE_ASSIST` (219) or holding the Home button on the navigation bar instantly launches IMS Settings!
 
-#### 1. One-Liner (Assign, Trigger, & Restore Assistant):
+### Raw ADB / Shizuku Commands:
+
+#### 1. Assign IMS Settings as Assistant:
 ```bash
-adb shell "input keyevent KEYCODE_HOME; settings put secure assistant 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'; input keyevent --longpress KEYCODE_HOME; settings put secure assistant 'com.google.android.googlequicksearchbox/com.google.android.voiceinteraction.GsaVoiceInteractionService'"
+adb shell settings put secure assistant 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
 ```
 
-#### 2. Step-by-Step Execution:
+#### 2. Trigger Assist Keyevent (Launches IMS Settings Instantly):
 ```bash
-# Return to home:
-adb shell input keyevent KEYCODE_HOME
+adb shell input keyevent 219
+```
+*(Key code 219 corresponds to `KEYCODE_ASSIST`)*
 
-# Set IMS as assistant:
-adb shell settings put secure assistant 'com.samsung.advp.imssettings/com.samsung.advp.imssettings.MainActivity'
-
-# Simulate long-press of Home button:
-adb shell input keyevent --longpress KEYCODE_HOME
-
-# Restore Google Assistant:
-adb shell settings put secure assistant 'com.google.android.googlequicksearchbox/com.google.android.voiceinteraction.GsaVoiceInteractionService'
+#### 3. Restore Default Google Assistant:
+```bash
+adb shell settings put secure assistant 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.staticplugins.opa.omnihost.OpaRootHostActivity'
 ```
 
 ### Associated Code in App
 - **File**: [`AssistantManager.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/methods/AssistantManager.kt)
-  - `applyImsAssistant()`: Backs up current assistant and applies IMS settings.
-  - `triggerHomeLongPress()`: Executes `input keyevent --longpress KEYCODE_HOME` (or `input keyevent 219`).
-  - `restoreGoogleAssistant()`: Restores Google Assistant service.
+  - `applyImsAssistant()`: Backs up current assistant and applies IMS Settings via `Settings.Secure.putString`.
+  - `triggerHomeLongPress()`: Executes `input keyevent 219` (`KEYCODE_ASSIST`) for instant launch.
+  - `restoreGoogleAssistant()`: Restores Google Assistant component.
 
 ---
 
-## 5. Method 4: Direct Launch & Samsung Band Selection
+## 5. Method 4: 1-Click Samsung IMS Package Repair & Enable
 
 ### Why It Works
-- On **Android 10 through Android 12** (and some pre-One UI 5 ROMs), `com.samsung.advp.imssettings/.MainActivity` was exported or permitted direct invocation by shell users.
-- Samsung Telephony UI also exposes a hidden band selection activity (`com.samsung.android.app.telephonyui/.hiddennetworksetting.MainActivity`) that allows users to lock specific LTE/5G bands (Band 3, 20, 28, 41, etc.).
+Often on carrier-branded or debloated devices, carrier bloat removers or carrier switching tools disable Samsung's core IMS services (`com.sec.ims`, `com.sec.imsservice`, etc.). When disabled, VoLTE cannot register even if GCF MODE is turned on.
 
-### Raw ADB Commands
+Using Shizuku shell (`pm enable` and `cmd package install-existing`), VoLTE Enabler re-enables and reinstalls missing packages on-device without root.
 
-#### 1. Direct Launch IMS Settings:
+### Raw ADB Commands:
+
+#### 1. Reinstall Uninstalled Carrier IMS Packages:
 ```bash
-am start -n com.samsung.advp.imssettings/.MainActivity
+cmd package install-existing com.sec.ims
+cmd package install-existing com.sec.imsservice
+cmd package install-existing com.samsung.advp.imssettings
+cmd package install-existing com.sec.imslogger
+cmd package install-existing com.sec.epdg
 ```
 
-#### 2. Launch Samsung Hidden Network Band Selection:
+#### 2. Enable Disabled Packages:
 ```bash
-am start -n com.samsung.android.app.telephonyui/.hiddennetworksetting.MainActivity
+pm enable com.sec.ims
+pm enable com.sec.imsservice
+pm enable com.samsung.advp.imssettings
+pm enable com.sec.imslogger
+pm enable com.sec.epdg
 ```
+
+### Associated Code in App
+- **File**: [`ImsRepairManager.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/methods/ImsRepairManager.kt)
+- **Data Model**: [`ImsPackageInfo.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/data/ImsPackageInfo.kt)
 
 ### Associated Code in App
 - **File**: [`VolteMethodsScreen.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/ui/screens/VolteMethodsScreen.kt) lines 193–223.
@@ -265,8 +254,15 @@ am start -n com.android.phone/.settings.RadioInfo
 ### 2. Access Point Names (APN) Shortcut
 Directly launches the system APN configuration screen:
 ```bash
+# Standard Android 10–12 launch:
 am start -a android.settings.APN_SETTINGS
+
+# Critical Android 14 / One UI 6 Fix:
+# On Android 14, Samsung ApnSettings closes immediately with "Due to SIM absent" if sub_id is omitted.
+# It must be launched with the active SIM's subscription ID:
+am start -a android.settings.APN_SETTINGS --ei sub_id <ACTIVE_SUB_ID>
 ```
+*In Kotlin code ([`NetworkToolsScreen.kt`](file:///d:/github_project/enable-volte-app/VoLTEEnabler/app/src/main/java/com/volteenabler/app/ui/screens/NetworkToolsScreen.kt)), the app queries `SubscriptionManager.getDefaultDataSubscriptionId()` and attaches both `sub_id` and `android.provider.extra.SUB_ID` with `FLAG_ACTIVITY_NEW_TASK`.*
 
 ### 3. Mobile Data Quick Settings Tile Restorer
 Some carrier CSC profiles hide the Mobile Data toggle from the Quick Settings notification shade. This command appends `MobileData` to `sysui_qs_tiles`:
