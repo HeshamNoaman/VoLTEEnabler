@@ -72,16 +72,12 @@ fun VolteMethodsScreen(
                 stringResource(R.string.method_sidekey_dialog_step1),
                 stringResource(R.string.method_sidekey_dialog_step2),
                 stringResource(R.string.method_sidekey_dialog_step3),
-                stringResource(R.string.method_sidekey_dialog_step4),
-                stringResource(R.string.method_sidekey_dialog_step5),
-                stringResource(R.string.method_sidekey_dialog_step6),
-                stringResource(R.string.method_sidekey_dialog_step7)
+                stringResource(R.string.method_sidekey_dialog_step4)
             ),
             actionButtonText = stringResource(R.string.method_sidekey_dialog_action),
             onActionClick = {
-                scope.launch {
-                    SideKeyManager.openSideKeySettings(context)
-                }
+                showSideKeyDialog = false
+                showInstructionsDialog = true
             },
             onDismiss = { showSideKeyDialog = false }
         )
@@ -100,7 +96,7 @@ fun VolteMethodsScreen(
             ),
             actionButtonText = stringResource(R.string.method_assistant_dialog_action),
             onActionClick = {
-                AssistantManager.openAssistantSettings(context)
+                showAssistantDialog = false
             },
             onDismiss = { showAssistantDialog = false }
         )
@@ -216,58 +212,63 @@ fun VolteMethodsScreen(
             }
         )
 
-        // Method 2: Side Key / Double-Press Power
+        // Method 2: Side Key / Double-Press Power (Android 10-12 only; blocked on Android 13/14)
+        val isAndroid13Plus = android.os.Build.VERSION.SDK_INT >= 33
+
         MethodCard(
             title = stringResource(R.string.method_sidekey_title),
             description = stringResource(R.string.method_sidekey_desc),
             icon = Icons.Default.PowerSettingsNew,
             extraContent = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            if (!isAuthorized) {
-                                showSideKeyDialog = true
-                                return@OutlinedButton
-                            }
-                            scope.launch {
-                                SideKeyManager.triggerDoublePower()
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
+                if (isAndroid13Plus) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.method_sidekey_trigger),
-                            style = MaterialTheme.typography.labelMedium
+                            text = stringResource(R.string.method_sidekey_blocked_notice),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.padding(10.dp)
                         )
                     }
-                    OutlinedButton(
-                        onClick = {
-                            // Opens native Samsung Side Key settings screen directly without Shizuku!
-                            scope.launch {
-                                SideKeyManager.openSideKeySettings(context)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(
-                            text = stringResource(R.string.method_sidekey_open_settings),
-                            style = MaterialTheme.typography.labelMedium
-                        )
+                        OutlinedButton(
+                            onClick = {
+                                if (!isAuthorized) {
+                                    showSideKeyDialog = true
+                                    return@OutlinedButton
+                                }
+                                scope.launch {
+                                    SideKeyManager.triggerDoublePower()
+                                }
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.method_sidekey_trigger),
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
                     }
                 }
             },
-            primaryButtonText = if (isAuthorized) {
-                stringResource(R.string.method_sidekey_apply)
+            primaryButtonText = if (isAndroid13Plus) {
+                stringResource(R.string.method_sidekey_why_blocked)
             } else {
-                stringResource(R.string.method_sidekey_open_settings)
+                stringResource(R.string.method_sidekey_apply)
             },
             onPrimaryClick = {
-                if (!isAuthorized) {
+                if (isAndroid13Plus || !isAuthorized) {
                     showSideKeyDialog = true
                     return@MethodCard
                 }
@@ -278,19 +279,12 @@ fun VolteMethodsScreen(
                         kotlinx.coroutines.delay(400)
                         SideKeyManager.triggerDoublePower()
                     } else {
-                        // Knox blocks Settings.Global writes on One UI 6; show clear manual instructions
                         showSideKeyDialog = true
                     }
                 }
             },
             secondaryButtonText = stringResource(R.string.method_sidekey_restore),
             onSecondaryClick = {
-                if (!isAuthorized) {
-                    scope.launch {
-                        SideKeyManager.openSideKeySettings(context)
-                    }
-                    return@MethodCard
-                }
                 scope.launch {
                     SideKeyManager.restoreCameraDoublePress()
                     Toast.makeText(context, restoredMsg, Toast.LENGTH_SHORT).show()

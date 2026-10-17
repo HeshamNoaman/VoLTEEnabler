@@ -55,47 +55,38 @@
     <string name="dialog_got_it">Got It</string>
 
     <!-- Method 2: Side Key -->
-    <string name="method_sidekey_title">Method 2: Side Key / Double-Press Power</string>
-    <string name="method_sidekey_desc">Configures double-pressing the power button to launch IMS Settings. Works with automated Shizuku or manual setup.</string>
-    <string name="method_sidekey_apply">Assign &amp; Trigger Double-Press</string>
+    <string name="method_sidekey_title">Method 2: Side Key / Double-Press Power (Android 10-12 Only)</string>
+    <string name="method_sidekey_desc">Configures double-pressing the power button to launch IMS Settings. Blocked by Samsung on One UI 5 &amp; 6 (Android 13/14).</string>
+    <string name="method_sidekey_blocked_notice">⚠️ Not supported on Android 13/14 (One UI 5 &amp; 6). Samsung removed IMS Settings from the Side Key app picker and blocked database edits via Knox. Please use Method 1 (Lockscreen Shortcut)!</string>
+    <string name="method_sidekey_apply">Assign Double-Press (Android 10-12)</string>
     <string name="method_sidekey_trigger">Simulate Double-Press</string>
-    <string name="method_sidekey_open_settings">Open Side Key Settings</string>
+    <string name="method_sidekey_why_blocked">Why is it blocked?</string>
     <string name="method_sidekey_restore">Restore Double-Press to Camera</string>
-    <string name="method_sidekey_dialog_title">Configure Side Key (Double Press)</string>
-    <string name="method_sidekey_dialog_step1">1. Tap \"Open Side Key Settings\" below.</string>
-    <string name="method_sidekey_dialog_step2">2. Turn on the \"Double press\" switch.</string>
-    <string name="method_sidekey_dialog_step3">3. Choose \"Open app\" and tap the gear ⚙️ icon next to it.</string>
-    <string name="method_sidekey_dialog_step4">4. Search for and choose \"IMS Settings\" (com.samsung.advp.imssettings).</string>
-    <string name="method_sidekey_dialog_step5">5. Double press your physical Power button twice to open IMS Settings.</string>
-    <string name="method_sidekey_dialog_step6">6. Inside IMS Settings, enable \"GCF MODE\" and tap OK. VoLTE will activate!</string>
-    <string name="method_sidekey_dialog_step7">7. When done, re-open Side Key settings to restore Camera.</string>
-    <string name="method_sidekey_dialog_action">Open Side Key Settings</string>
+    <string name="method_sidekey_dialog_title">Side Key Blocked on One UI 5 &amp; 6</string>
+    <string name="method_sidekey_dialog_step1">1. On Android 13 &amp; 14 (One UI 5 &amp; 6), Samsung restricts the Side Key app picker strictly to apps with launcher icons.</string>
+    <string name="method_sidekey_dialog_step2">2. Hidden system activities (like IMS Settings) lack a launcher icon and cannot be chosen in Samsung\'s Side Key settings.</string>
+    <string name="method_sidekey_dialog_step3">3. In addition, Samsung\'s AdbCommandUtils blocks shell and Shizuku from writing to function_key_config_doublepress_value.</string>
+    <string name="method_sidekey_dialog_step4">4. Solution: Use Method 1 (Lockscreen Shortcut) or Method 3 (Assistant Hijack), which work 100% on this device!</string>
+    <string name="method_sidekey_dialog_action">Switch to Method 1</string>
 
     <!-- Method 3: Assistant -->
     <string name="method_assistant_title">Method 3: Assistant / Long-Press Home</string>
-    <string name="method_assistant_desc">Temporarily sets digital assistant to IMS Settings so long-pressing Home opens it.</string>
+    <string name="method_assistant_desc">Temporarily sets digital assistant to IMS Settings so long-pressing Home opens it (Works 100% via Shizuku).</string>
     <string name="method_assistant_apply">Set IMS as Assistant</string>
     <string name="method_assistant_trigger">Trigger Home Long-Press</string>
     <string name="method_assistant_open_settings">Open Assistant Settings</string>
     <string name="method_assistant_restore">Restore Google Assistant</string>
-    <string name="method_assistant_dialog_title">Configure Digital Assistant</string>
-    <string name="method_assistant_dialog_step1">1. Tap \"Open Assistant Settings\" below.</string>
-    <string name="method_assistant_dialog_step2">2. Tap \"Digital assistant app\" (or Default assistant app).</string>
-    <string name="method_assistant_dialog_step3">3. Choose \"IMS Settings\" as your digital assistant.</string>
-    <string name="method_assistant_dialog_step4">4. Long-press your Home button (or swipe from bottom corner) to launch IMS Settings.</string>
-    <string name="method_assistant_dialog_step5">5. Inside IMS Settings, enable \"GCF MODE\" and tap OK to activate VoLTE!</string>
-    <string name="method_assistant_dialog_step6">6. Return to Assistant Settings and select \"Google\" to restore your assistant.</string>
-    <string name="method_assistant_dialog_action">Open Assistant Settings</string>
+    <string name="method_assistant_dialog_title">Assistant Hijack Instructions</string>
+    <string name="method_assistant_dialog_step1">1. Connect and authorize Shizuku on your phone.</string>
+    <string name="method_assistant_dialog_step2">2. Tap \"Set IMS as Assistant\" in this app.</string>
+    <string name="method_assistant_dialog_step3">3. Long-press the Home button on your screen (or tap Trigger in the app) to open IMS Settings immediately!</string>
+    <string name="method_assistant_dialog_step4">4. Inside IMS Settings, enable \"GCF MODE\" and tap OK to activate VoLTE.</string>
+    <string name="method_assistant_dialog_step5">5. Return to this app and tap \"Restore Google Assistant\".</string>
+    <string name="method_assistant_dialog_step6">Note: If you don\'t have Shizuku, please use Method 1 (Lockscreen Shortcut), which works completely without Shizuku!</string>
+    <string name="method_assistant_dialog_action">Got It</string>
 
-    <!-- Method 4: Direct Launch -->
-    <string name="method_direct_title">Method 4: Direct Launch IMS</string>
-    <string name="method_direct_desc">Launches IMS Settings activity directly via Shizuku shell. Works on Android 10-12.</string>
-    <string name="method_direct_launch_ims">Launch IMS Settings</string>
-    <string name="method_direct_launch_band">Launch Samsung Band Selection</string>
-    <string name="method_direct_denied">Direct launch blocked by Knox/Security on Android 14. Please use Method 1 (Lockscreen Shortcut)!</string>
-
-    <!-- Method 5: IMS Repair -->
-    <string name="method_repair_title">Method 5: Reinstall &amp; Enable IMS Packages</string>
+    <!-- Method 4: IMS Repair -->
+    <string name="method_repair_title">Method 4: Reinstall &amp; Enable IMS Packages</string>
     <string name="method_repair_desc">Re-enables and reinstalls missing or debloated Samsung IMS system packages (com.sec.ims, com.samsung.advp.imssettings, etc.).</string>
     <string name="method_repair_scan">Scan Packages</string>
     <string name="method_repair_all">1-Click Repair &amp; Enable All</string>

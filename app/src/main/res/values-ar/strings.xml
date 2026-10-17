@@ -55,47 +55,38 @@
     <string name="dialog_got_it">فهمت الخطوات</string>
 
     <!-- Method 2: Side Key -->
-    <string name="method_sidekey_title">الطريقة الثانية: المفتاح الجانبي (الضغط المزدوج على زر البور)</string>
-    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS. تعمل تلقائياً عبر شيزوكو أو يدوياً عبر الإعدادات.</string>
-    <string name="method_sidekey_apply">تعيين وتشغيل الضغط المزدوج</string>
+    <string name="method_sidekey_title">الطريقة الثانية: المفتاح الجانبي (أندرويد 10 إلى 12 فقط)</string>
+    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS. محظورة من قِبل سامسونج في أندرويد 13 و 14 (One UI 5 و 6).</string>
+    <string name="method_sidekey_blocked_notice">⚠️ غير مدعومة على أندرويد 13 و 14 (One UI 5 و 6). حذفت سامسونج إعدادات IMS من قائمة اختيار تطبيقات المفتاح الجانبي وحظرت تعديلها عبر النظام. يرجى استخدام الطريقة الأولى (اختصار شاشة القفل)!</string>
+    <string name="method_sidekey_apply">تعيين الضغط المزدوج (أندرويد 10-12)</string>
     <string name="method_sidekey_trigger">محاكاة الضغط المزدوج</string>
-    <string name="method_sidekey_open_settings">فتح إعدادات المفتاح الجانبي</string>
+    <string name="method_sidekey_why_blocked">لماذا تم حظرها؟</string>
     <string name="method_sidekey_restore">استعادة وظيفة الكاميرا</string>
-    <string name="method_sidekey_dialog_title">تعليمات ضبط المفتاح الجانبي (الضغط مرتين)</string>
-    <string name="method_sidekey_dialog_step1">1. اضغط على زر \"فتح إعدادات المفتاح الجانبي\" بالأسفل.</string>
-    <string name="method_sidekey_dialog_step2">2. قم بتفعيل مفتاح \"الضغط مرتين\" (Double press).</string>
-    <string name="method_sidekey_dialog_step3">3. حدد خيار \"فتح التطبيق\" واضغط على أيقونة الترس ⚙️ بجانبه.</string>
-    <string name="method_sidekey_dialog_step4">4. ابحث واختر تطبيق \"إعدادات IMS\" (com.samsung.advp.imssettings).</string>
-    <string name="method_sidekey_dialog_step5">5. اضغط مرتين سريعاً على زر تشغيل الهاتف (البور) لفتح إعدادات IMS.</string>
-    <string name="method_sidekey_dialog_step6">6. في واجهة IMS، قم بتفعيل خيار \"GCF MODE\" واضغط موافق؛ ستتفعل ميزة VoLTE فوراً!</string>
-    <string name="method_sidekey_dialog_step7">7. بعد الانتهاء، يمكنك إعادة خيار الضغط مرتين إلى \"تشغيل سريع للكاميرا\".</string>
-    <string name="method_sidekey_dialog_action">فتح إعدادات المفتاح الجانبي</string>
+    <string name="method_sidekey_dialog_title">سبب حظر المفتاح الجانبي على One UI 5 و 6</string>
+    <string name="method_sidekey_dialog_step1">1. في أندرويد 13 و 14 (One UI 5 و 6)، تقيد سامسونج قائمة تطبيقات المفتاح الجانبي على التطبيقات ذات الأيقونات فقط.</string>
+    <string name="method_sidekey_dialog_step2">2. إعدادات IMS واجهة نظامية مخفية بدون أيقونة، لذا لا يمكن للمستخدم اختيارها يدوياً من قائمة إعدادات سامسونج.</string>
+    <string name="method_sidekey_dialog_step3">3. كما قامت سامسونج بحظر أوامر ADB وشيزوكو برمجياً من تعديل إعدادات المفتاح الجانبي في هذا الإصدار.</string>
+    <string name="method_sidekey_dialog_step4">4. الحل: استخدم الطريقة الأولى (اختصار شاشة القفل) أو الطريقة الثالثة (المساعد الرقمي)، فهما تعملان بنجاح 100%!</string>
+    <string name="method_sidekey_dialog_action">الانتقال للطريقة الأولى</string>
 
     <!-- Method 3: Assistant -->
     <string name="method_assistant_title">الطريقة الثالثة: المساعد الرقمي (الضغط المطول على زر الهوم)</string>
-    <string name="method_assistant_desc">تعيين إعدادات IMS كمساعد رقمي مؤقت بحيث يفتح عند الضغط المطول على زر الشاشة الرئيسية.</string>
+    <string name="method_assistant_desc">تعيين إعدادات IMS كمساعد رقمي مؤقت بحيث يفتح عند الضغط المطول على زر الشاشة الرئيسية (يعمل 100% عبر شيزوكو).</string>
     <string name="method_assistant_apply">تعيين IMS كمساعد رقمي</string>
     <string name="method_assistant_trigger">محاكاة ضغط زر الهوم مطولاً</string>
     <string name="method_assistant_open_settings">فتح إعدادات المساعد</string>
     <string name="method_assistant_restore">استعادة مساعد جوجل الافتراضي</string>
-    <string name="method_assistant_dialog_title">تعليمات ضبط المساعد الرقمي</string>
-    <string name="method_assistant_dialog_step1">1. اضغط على زر \"فتح إعدادات المساعد\" بالأسفل.</string>
-    <string name="method_assistant_dialog_step2">2. اضغط على خيار \"تطبيق المساعد الرقمي الافتراضي\".</string>
-    <string name="method_assistant_dialog_step3">3. حدد تطبيق \"إعدادات IMS\" (IMS Settings) كمساعد رقمي.</string>
-    <string name="method_assistant_dialog_step4">4. اضغط مطولاً على زر الشاشة الرئيسية (الهوم) أو اسحب من زاوية الشاشة لتشغيل إعدادات IMS.</string>
-    <string name="method_assistant_dialog_step5">5. داخل إعدادات IMS، قم بتفعيل خيار \"GCF MODE\" واضغط موافق لتفعيل VoLTE!</string>
-    <string name="method_assistant_dialog_step6">6. عد إلى إعدادات المساعد وأعد تعيين \"مساعد Google\" كالمساعد الافتراضي.</string>
-    <string name="method_assistant_dialog_action">فتح إعدادات المساعد</string>
+    <string name="method_assistant_dialog_title">تعليمات تفعيل المساعد الرقمي</string>
+    <string name="method_assistant_dialog_step1">1. قم بتشغيل ومنح الصلاحية لتطبيق شيزوكو (Shizuku) على الهاتف.</string>
+    <string name="method_assistant_dialog_step2">2. اضغط على زر \"تعيين IMS كمساعد رقمي\" في التطبيق.</string>
+    <string name="method_assistant_dialog_step3">3. اضغط مطولاً على زر الشاشة الرئيسية (الهوم) أو اضغط على زر محاكاة الضغط في التطبيق لتفتح واجهة IMS فوراً!</string>
+    <string name="method_assistant_dialog_step4">4. داخل إعدادات IMS، قم بتفعيل خيار \"GCF MODE\" واضغط موافق لتفعيل VoLTE.</string>
+    <string name="method_assistant_dialog_step5">5. عد إلى هذا التطبيق واضغط على \"استعادة مساعد جوجل الافتراضي\".</string>
+    <string name="method_assistant_dialog_step6">ملاحظة: إذا لم يتوفر لديك شيزوكو، يرجى استخدام الطريقة الأولى (اختصار شاشة القفل) فهي تعمل 100% بدون شيزوكو!</string>
+    <string name="method_assistant_dialog_action">فهمت ذلك</string>
 
-    <!-- Method 4: Direct Launch -->
-    <string name="method_direct_title">الطريقة الرابعة: الفتح المباشر لإعدادات IMS</string>
-    <string name="method_direct_desc">تشغيل واجهة IMS مباشرة عبر أوامر شيزوكو (يعمل على أندرويد 10 إلى 12).</string>
-    <string name="method_direct_launch_ims">فتح إعدادات IMS مباشرة</string>
-    <string name="method_direct_launch_band">فتح واجهة اختيار الترددات (Band Selection)</string>
-    <string name="method_direct_denied">تم حظر الفتح المباشر بواسطة حماية أندرويد 14. يرجى استخدام الطريقة الأولى (اختصار شاشة القفل)!</string>
-
-    <!-- Method 5: IMS Repair -->
-    <string name="method_repair_title">الطريقة الخامسة: إصلاح وإعادة تفعيل حزم IMS</string>
+    <!-- Method 4: IMS Repair -->
+    <string name="method_repair_title">الطريقة الرابعة: إصلاح وإعادة تفعيل حزم IMS</string>
     <string name="method_repair_desc">إعادة تثبيت وتفعيل حزم سامسونج الأساسية الخاصة بـ VoLTE في حال كانت معطلة أو محذوفة.</string>
     <string name="method_repair_scan">فحص حالة الحزم</string>
     <string name="method_repair_all">إصلاح وتفعيل جميع الحزم بضغطة زر</string>
