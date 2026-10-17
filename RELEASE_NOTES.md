@@ -1,44 +1,34 @@
-## VoLTE Enabler v1.0.0 - Initial Production Release
+## VoLTE Enabler v1.1.0 - Maintenance & One UI 6 Update
 
-A standalone native Android application that connects directly to **[Shizuku](https://shizuku.rikka.app/)** to enable VoLTE (Voice over LTE) on Samsung Galaxy and other Android devices **without requiring a PC, ADB cables, or root access**.
-
----
-
-### ✨ Features & Capabilities
-
-- 🔓 **Rootless Samsung One UI Bypass (Android 13 & 14)**:
-  - **Method 1 (Lockscreen Shortcut)**: Temporarily remap bottom-right lockscreen shortcut to launch unexported `com.samsung.advp.imssettings/.MainActivity` with system privileges. Includes 1-tap restore.
-  - **Method 2 (Side Key Double-Press)**: Rebinds the Samsung power button double-press action to open IMS Settings directly.
-  - **Method 3 (Digital Assistant Remap)**: Rebinds long-press Home/Assistant action to trigger IMS Settings.
-  - **Method 4 (Direct Activity Launch)**: For Android 10–12 devices where activity is exported, plus 1-tap Samsung Hidden Band Selection.
-  - **Method 5 (1-Click IMS Package Repair)**: Automatically detects, enables, and reinstalls disabled/hidden Samsung IMS packages (`com.sec.ims`, `com.sec.imsservice`, `com.samsung.advp.imssettings`, etc.).
-
-- 🛠️ **Network Utilities & Secret Menus**:
-  - Direct launcher for hidden **RadioInfo (`*#*#4636#*#*`)** to toggle VoLTE Provisioned, Wi-Fi Calling, and Preferred Network Type.
-  - One-tap access to APN settings and Mobile Data Quick Settings tile restore.
-  - MediaTek EngineerMode, MTK Band Selection, and LG Network shortcuts.
-  - Power Reboot menu (Normal, Recovery, Download / Odin, Bootloader).
-
-- 📋 **Carrier APN Presets**:
-  - One-tap copy profiles for Yemen Mobile 4G Data, VoLTE, XCAP, and generic Global VoLTE APNs.
-
-- 💻 **Interactive Privileged ADB Terminal**:
-  - Run arbitrary ADB shell commands directly on your phone with live output and diagnostic presets.
-
-- 🌍 **Bilingual Support**:
-  - Full support for English and Arabic with complete Right-to-Left (RTL) layout.
+A standalone native Android application that enables VoLTE (Voice over LTE) on Samsung Galaxy and other Android devices **without requiring a PC, ADB cables, or root access**.
 
 ---
 
-### 📥 Which APK Should I Download?
+### 🚀 What's New in v1.1.0
 
-- **`app-release.apk`** *(Recommended)*: Signed production release APK with optimized package size (~10 MB).
-- **`app-debug.apk`**: Debug build for development and detailed log inspection.
+- 🛠️ **Samsung One UI 6 (Android 14) APN Fix**:
+  - Automatically queries the active SIM's subscription ID (`sub_id`) and attaches it to the APN settings intent. Prevents Samsung `ApnSettings` from closing immediately with `"Due to SIM absent"`.
+- ⚡ **Enhanced Assistant Hijack (Method 3)**:
+  - Directly triggers `input keyevent 219` (`KEYCODE_ASSIST`) for instant, 100% reliable launching of IMS Settings on One UI 6 without waiting for gestures.
+- 📋 **Refined VoLTE Bypass Guidance**:
+  - **Method 1 (Lockscreen Shortcut)**: Highlighted as the 100% working non-Shizuku method for Android 10–15 using standard user `WRITE_SETTINGS`.
+  - **Method 2 (Side Key Double-Press)**: Clearly marked as Legacy (Android 10–12 only). Added technical notices explaining Samsung One UI 5 & 6 restrictions (`AdbCommandUtils` blacklist and `category.LAUNCHER` requirements).
+  - Streamlined method numbering (Method 4 is now 1-Click IMS Package Repair; unexported direct launch removed).
+- 🌐 **Separated Documentation**:
+  - Dedicated, unmixed English and Arabic documentation with one-click language switcher navigation.
+- 🔬 **Reverse Engineering Dossier**:
+  - Included binary analysis proof and disassembly dumps of One UI 6.1 `SettingsProvider.apk` and `services.jar`.
+
+---
+
+### 📥 Download Assets
+
+- **`app-release.apk`**: Signed production APK (Android 10.0+ / API 26+).
 
 ---
 
 ### 📋 Prerequisites
 
 1. Android 10.0 to Android 14+ (Samsung Galaxy One UI 2.0 to 6.1+ recommended).
-2. [Shizuku](https://github.com/RikkaApps/Shizuku/releases) installed and running (via Wireless Debugging or PC ADB).
+2. [Shizuku](https://github.com/RikkaApps/Shizuku/releases) installed and running (for Method 3, 4, and terminal commands).
 3. Grant **VoLTE Enabler** permission in the Shizuku manager when prompted.
