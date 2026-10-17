@@ -56,18 +56,36 @@
 
     <!-- Method 2: Side Key -->
     <string name="method_sidekey_title">الطريقة الثانية: المفتاح الجانبي (الضغط المزدوج على زر البور)</string>
-    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS ومحاكاة الضغط المزدوج تلقائياً.</string>
+    <string name="method_sidekey_desc">تعيين الضغط مرتين على زر البور لفتح إعدادات IMS. تعمل تلقائياً عبر شيزوكو أو يدوياً عبر الإعدادات.</string>
     <string name="method_sidekey_apply">تعيين وتشغيل الضغط المزدوج</string>
     <string name="method_sidekey_trigger">محاكاة الضغط المزدوج</string>
     <string name="method_sidekey_open_settings">فتح إعدادات المفتاح الجانبي</string>
     <string name="method_sidekey_restore">استعادة وظيفة الكاميرا</string>
+    <string name="method_sidekey_dialog_title">تعليمات ضبط المفتاح الجانبي (الضغط مرتين)</string>
+    <string name="method_sidekey_dialog_step1">1. اضغط على زر \"فتح إعدادات المفتاح الجانبي\" بالأسفل.</string>
+    <string name="method_sidekey_dialog_step2">2. قم بتفعيل مفتاح \"الضغط مرتين\" (Double press).</string>
+    <string name="method_sidekey_dialog_step3">3. حدد خيار \"فتح التطبيق\" واضغط على أيقونة الترس ⚙️ بجانبه.</string>
+    <string name="method_sidekey_dialog_step4">4. ابحث واختر تطبيق \"إعدادات IMS\" (com.samsung.advp.imssettings).</string>
+    <string name="method_sidekey_dialog_step5">5. اضغط مرتين سريعاً على زر تشغيل الهاتف (البور) لفتح إعدادات IMS.</string>
+    <string name="method_sidekey_dialog_step6">6. في واجهة IMS، قم بتفعيل خيار \"GCF MODE\" واضغط موافق؛ ستتفعل ميزة VoLTE فوراً!</string>
+    <string name="method_sidekey_dialog_step7">7. بعد الانتهاء، يمكنك إعادة خيار الضغط مرتين إلى \"تشغيل سريع للكاميرا\".</string>
+    <string name="method_sidekey_dialog_action">فتح إعدادات المفتاح الجانبي</string>
 
     <!-- Method 3: Assistant -->
     <string name="method_assistant_title">الطريقة الثالثة: المساعد الرقمي (الضغط المطول على زر الهوم)</string>
     <string name="method_assistant_desc">تعيين إعدادات IMS كمساعد رقمي مؤقت بحيث يفتح عند الضغط المطول على زر الشاشة الرئيسية.</string>
     <string name="method_assistant_apply">تعيين IMS كمساعد رقمي</string>
     <string name="method_assistant_trigger">محاكاة ضغط زر الهوم مطولاً</string>
+    <string name="method_assistant_open_settings">فتح إعدادات المساعد</string>
     <string name="method_assistant_restore">استعادة مساعد جوجل الافتراضي</string>
+    <string name="method_assistant_dialog_title">تعليمات ضبط المساعد الرقمي</string>
+    <string name="method_assistant_dialog_step1">1. اضغط على زر \"فتح إعدادات المساعد\" بالأسفل.</string>
+    <string name="method_assistant_dialog_step2">2. اضغط على خيار \"تطبيق المساعد الرقمي الافتراضي\".</string>
+    <string name="method_assistant_dialog_step3">3. حدد تطبيق \"إعدادات IMS\" (IMS Settings) كمساعد رقمي.</string>
+    <string name="method_assistant_dialog_step4">4. اضغط مطولاً على زر الشاشة الرئيسية (الهوم) أو اسحب من زاوية الشاشة لتشغيل إعدادات IMS.</string>
+    <string name="method_assistant_dialog_step5">5. داخل إعدادات IMS، قم بتفعيل خيار \"GCF MODE\" واضغط موافق لتفعيل VoLTE!</string>
+    <string name="method_assistant_dialog_step6">6. عد إلى إعدادات المساعد وأعد تعيين \"مساعد Google\" كالمساعد الافتراضي.</string>
+    <string name="method_assistant_dialog_action">فتح إعدادات المساعد</string>
 
     <!-- Method 4: Direct Launch -->
     <string name="method_direct_title">الطريقة الرابعة: الفتح المباشر لإعدادات IMS</string>

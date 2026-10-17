@@ -35,6 +35,8 @@ fun VolteMethodsScreen(
     val scope = rememberCoroutineScope()
 
     var showInstructionsDialog by remember { mutableStateOf(false) }
+    var showSideKeyDialog by remember { mutableStateOf(false) }
+    var showAssistantDialog by remember { mutableStateOf(false) }
     var currentShortcutRaw by remember { mutableStateOf("") }
     var imsPackages by remember { mutableStateOf(ImsPackageInfo.getRequiredPackages()) }
 
@@ -60,6 +62,47 @@ fun VolteMethodsScreen(
                 stringResource(R.string.method_lockscreen_dialog_step6)
             ),
             onDismiss = { showInstructionsDialog = false }
+        )
+    }
+
+    if (showSideKeyDialog) {
+        InstructionDialog(
+            title = stringResource(R.string.method_sidekey_dialog_title),
+            steps = listOf(
+                stringResource(R.string.method_sidekey_dialog_step1),
+                stringResource(R.string.method_sidekey_dialog_step2),
+                stringResource(R.string.method_sidekey_dialog_step3),
+                stringResource(R.string.method_sidekey_dialog_step4),
+                stringResource(R.string.method_sidekey_dialog_step5),
+                stringResource(R.string.method_sidekey_dialog_step6),
+                stringResource(R.string.method_sidekey_dialog_step7)
+            ),
+            actionButtonText = stringResource(R.string.method_sidekey_dialog_action),
+            onActionClick = {
+                scope.launch {
+                    SideKeyManager.openSideKeySettings(context)
+                }
+            },
+            onDismiss = { showSideKeyDialog = false }
+        )
+    }
+
+    if (showAssistantDialog) {
+        InstructionDialog(
+            title = stringResource(R.string.method_assistant_dialog_title),
+            steps = listOf(
+                stringResource(R.string.method_assistant_dialog_step1),
+                stringResource(R.string.method_assistant_dialog_step2),
+                stringResource(R.string.method_assistant_dialog_step3),
+                stringResource(R.string.method_assistant_dialog_step4),
+                stringResource(R.string.method_assistant_dialog_step5),
+                stringResource(R.string.method_assistant_dialog_step6)
+            ),
+            actionButtonText = stringResource(R.string.method_assistant_dialog_action),
+            onActionClick = {
+                AssistantManager.openAssistantSettings(context)
+            },
+            onDismiss = { showAssistantDialog = false }
         )
     }
 
@@ -188,7 +231,7 @@ fun VolteMethodsScreen(
                     OutlinedButton(
                         onClick = {
                             if (!isAuthorized) {
-                                Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                                showSideKeyDialog = true
                                 return@OutlinedButton
                             }
                             scope.launch {
@@ -218,10 +261,14 @@ fun VolteMethodsScreen(
                     }
                 }
             },
-            primaryButtonText = stringResource(R.string.method_sidekey_apply),
+            primaryButtonText = if (isAuthorized) {
+                stringResource(R.string.method_sidekey_apply)
+            } else {
+                stringResource(R.string.method_sidekey_open_settings)
+            },
             onPrimaryClick = {
                 if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                    showSideKeyDialog = true
                     return@MethodCard
                 }
                 scope.launch {
@@ -231,14 +278,17 @@ fun VolteMethodsScreen(
                         kotlinx.coroutines.delay(400)
                         SideKeyManager.triggerDoublePower()
                     } else {
-                        Toast.makeText(context, "Failed to apply Side Key settings", Toast.LENGTH_SHORT).show()
+                        // Knox blocks Settings.Global writes on One UI 6; show clear manual instructions
+                        showSideKeyDialog = true
                     }
                 }
             },
             secondaryButtonText = stringResource(R.string.method_sidekey_restore),
             onSecondaryClick = {
                 if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                    scope.launch {
+                        SideKeyManager.openSideKeySettings(context)
+                    }
                     return@MethodCard
                 }
                 scope.launch {
@@ -253,22 +303,68 @@ fun VolteMethodsScreen(
             title = stringResource(R.string.method_assistant_title),
             description = stringResource(R.string.method_assistant_desc),
             icon = Icons.Default.Assistant,
-            primaryButtonText = stringResource(R.string.method_assistant_apply),
+            extraContent = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            if (!isAuthorized) {
+                                showAssistantDialog = true
+                                return@OutlinedButton
+                            }
+                            scope.launch {
+                                AssistantManager.triggerHomeLongPress()
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.method_assistant_trigger),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            // Opens Assistant Settings screen natively without Shizuku!
+                            AssistantManager.openAssistantSettings(context)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.method_assistant_open_settings),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                }
+            },
+            primaryButtonText = if (isAuthorized) {
+                stringResource(R.string.method_assistant_apply)
+            } else {
+                stringResource(R.string.method_assistant_open_settings)
+            },
             onPrimaryClick = {
                 if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                    showAssistantDialog = true
                     return@MethodCard
                 }
                 scope.launch {
-                    AssistantManager.applyImsAssistant()
-                    Toast.makeText(context, appliedMsg, Toast.LENGTH_SHORT).show()
-                    AssistantManager.triggerHomeLongPress()
+                    val ok = AssistantManager.applyImsAssistant()
+                    if (ok) {
+                        Toast.makeText(context, appliedMsg, Toast.LENGTH_SHORT).show()
+                        AssistantManager.triggerHomeLongPress()
+                    } else {
+                        showAssistantDialog = true
+                    }
                 }
             },
             secondaryButtonText = stringResource(R.string.method_assistant_restore),
             onSecondaryClick = {
                 if (!isAuthorized) {
-                    Toast.makeText(context, errorShizukuMsg, Toast.LENGTH_SHORT).show()
+                    AssistantManager.openAssistantSettings(context)
                     return@MethodCard
                 }
                 scope.launch {

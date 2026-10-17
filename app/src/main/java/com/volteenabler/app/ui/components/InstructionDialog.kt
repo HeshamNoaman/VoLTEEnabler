@@ -20,7 +20,9 @@ import com.volteenabler.app.ui.theme.SuccessGreen
 fun InstructionDialog(
     title: String,
     steps: List<String>,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    actionButtonText: String? = null,
+    onActionClick: (() -> Unit)? = null
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -67,6 +69,13 @@ fun InstructionDialog(
             Button(onClick = onDismiss) {
                 Text(stringResource(R.string.dialog_got_it))
             }
-        }
+        },
+        dismissButton = if (actionButtonText != null && onActionClick != null) {
+            {
+                FilledTonalButton(onClick = onActionClick) {
+                    Text(actionButtonText)
+                }
+            }
+        } else null
     )
 }

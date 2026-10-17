@@ -56,18 +56,36 @@
 
     <!-- Method 2: Side Key -->
     <string name="method_sidekey_title">Method 2: Side Key / Double-Press Power</string>
-    <string name="method_sidekey_desc">Configures double-pressing the power button to launch IMS Settings and simulates the double press automatically.</string>
+    <string name="method_sidekey_desc">Configures double-pressing the power button to launch IMS Settings. Works with automated Shizuku or manual setup.</string>
     <string name="method_sidekey_apply">Assign &amp; Trigger Double-Press</string>
     <string name="method_sidekey_trigger">Simulate Double-Press</string>
     <string name="method_sidekey_open_settings">Open Side Key Settings</string>
     <string name="method_sidekey_restore">Restore Double-Press to Camera</string>
+    <string name="method_sidekey_dialog_title">Configure Side Key (Double Press)</string>
+    <string name="method_sidekey_dialog_step1">1. Tap \"Open Side Key Settings\" below.</string>
+    <string name="method_sidekey_dialog_step2">2. Turn on the \"Double press\" switch.</string>
+    <string name="method_sidekey_dialog_step3">3. Choose \"Open app\" and tap the gear ⚙️ icon next to it.</string>
+    <string name="method_sidekey_dialog_step4">4. Search for and choose \"IMS Settings\" (com.samsung.advp.imssettings).</string>
+    <string name="method_sidekey_dialog_step5">5. Double press your physical Power button twice to open IMS Settings.</string>
+    <string name="method_sidekey_dialog_step6">6. Inside IMS Settings, enable \"GCF MODE\" and tap OK. VoLTE will activate!</string>
+    <string name="method_sidekey_dialog_step7">7. When done, re-open Side Key settings to restore Camera.</string>
+    <string name="method_sidekey_dialog_action">Open Side Key Settings</string>
 
     <!-- Method 3: Assistant -->
     <string name="method_assistant_title">Method 3: Assistant / Long-Press Home</string>
     <string name="method_assistant_desc">Temporarily sets digital assistant to IMS Settings so long-pressing Home opens it.</string>
     <string name="method_assistant_apply">Set IMS as Assistant</string>
     <string name="method_assistant_trigger">Trigger Home Long-Press</string>
+    <string name="method_assistant_open_settings">Open Assistant Settings</string>
     <string name="method_assistant_restore">Restore Google Assistant</string>
+    <string name="method_assistant_dialog_title">Configure Digital Assistant</string>
+    <string name="method_assistant_dialog_step1">1. Tap \"Open Assistant Settings\" below.</string>
+    <string name="method_assistant_dialog_step2">2. Tap \"Digital assistant app\" (or Default assistant app).</string>
+    <string name="method_assistant_dialog_step3">3. Choose \"IMS Settings\" as your digital assistant.</string>
+    <string name="method_assistant_dialog_step4">4. Long-press your Home button (or swipe from bottom corner) to launch IMS Settings.</string>
+    <string name="method_assistant_dialog_step5">5. Inside IMS Settings, enable \"GCF MODE\" and tap OK to activate VoLTE!</string>
+    <string name="method_assistant_dialog_step6">6. Return to Assistant Settings and select \"Google\" to restore your assistant.</string>
+    <string name="method_assistant_dialog_action">Open Assistant Settings</string>
 
     <!-- Method 4: Direct Launch -->
     <string name="method_direct_title">Method 4: Direct Launch IMS</string>

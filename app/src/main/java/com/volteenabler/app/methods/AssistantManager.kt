@@ -25,4 +25,27 @@ object AssistantManager {
         val s2 = SettingsHelper.putSecure(KEY_CAMERA_GESTURE, "0")
         return s1 && s2
     }
+
+    /**
+     * Opens Android's native Voice Input & Assistant settings screen.
+     * Works without Shizuku via standard Android Intent.
+     */
+    fun openAssistantSettings(context: android.content.Context): Boolean {
+        val intents = listOf(
+            android.content.Intent(android.provider.Settings.ACTION_VOICE_INPUT_SETTINGS),
+            android.content.Intent("android.settings.VOICE_INPUT_SETTINGS"),
+            android.content.Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS),
+            android.content.Intent(android.provider.Settings.ACTION_SETTINGS)
+        )
+        for (intent in intents) {
+            try {
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
+                return true
+            } catch (_: Exception) {
+                // Continue to next fallback
+            }
+        }
+        return false
+    }
 }
